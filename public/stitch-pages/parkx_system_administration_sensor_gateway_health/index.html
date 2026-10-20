@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ParkX Transit — System Administration &amp; Sensor Gateway Health</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "error": "#ba1a1a",
+            "on-error": "#ffffff",
+            "on-error-container": "#93000a",
+            "surface-variant": "#d3e4fe",
+            "inverse-on-surface": "#eaf1ff",
+            "on-primary-container": "#7c839b",
+            "primary-container": "#131b2e",
+            "surface-container-low": "#eff4ff",
+            "tertiary-container": "#002113",
+            "error-container": "#ffdad6",
+            "on-primary": "#ffffff",
+            "on-background": "#0b1c30",
+            "on-tertiary": "#ffffff",
+            "on-secondary-fixed": "#001e2f",
+            "secondary-fixed": "#c9e6ff",
+            "surface-tint": "#565e74",
+            "outline-variant": "#c6c6cd",
+            "inverse-primary": "#bec6e0",
+            "background": "#f8f9ff",
+            "on-primary-fixed-variant": "#3f465c",
+            "surface": "#f8f9ff",
+            "primary-fixed": "#dae2fd",
+            "surface-container-lowest": "#ffffff",
+            "outline": "#76777d",
+            "on-secondary-fixed-variant": "#004c6e",
+            "on-tertiary-fixed-variant": "#005236",
+            "surface-bright": "#f8f9ff",
+            "surface-container-high": "#dce9ff",
+            "primary-fixed-dim": "#bec6e0",
+            "surface-container-highest": "#d3e4fe",
+            "on-secondary-container": "#004666",
+            "tertiary": "#000000",
+            "surface-dim": "#cbdbf5",
+            "secondary": "#006591",
+            "surface-container": "#e5eeff",
+            "tertiary-fixed": "#6ffbbe",
+            "primary": "#000000",
+            "inverse-surface": "#213145",
+            "on-primary-fixed": "#131b2e",
+            "secondary-fixed-dim": "#89ceff",
+            "on-secondary": "#ffffff",
+            "on-surface-variant": "#45464d",
+            "on-tertiary-fixed": "#002113",
+            "secondary-container": "#39b8fd",
+            "on-surface": "#0b1c30",
+            "tertiary-fixed-dim": "#4edea3",
+            "on-tertiary-container": "#009668"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "gutter-compact": "0.5rem",
+            "space-sm": "0.5rem",
+            "margin": "1.5rem",
+            "space-lg": "1.25rem",
+            "space-md": "0.75rem",
+            "gutter": "1rem",
+            "space-xs": "0.25rem",
+            "space-xl": "1.75rem",
+            "margin-mobile": "0.75rem"
+          },
+          "fontFamily": {
+            "headline-md": ["Inter"],
+            "label-sm": ["Inter"],
+            "mono-metric": ["JetBrains Mono"],
+            "mono-timestamp": ["JetBrains Mono"],
+            "label-md": ["Inter"],
+            "display": ["Inter"],
+            "body-sm": ["Inter"],
+            "mono-data": ["JetBrains Mono"],
+            "body-lg": ["Inter"],
+            "body-md": ["Inter"],
+            "headline-sm": ["Inter"],
+            "headline-lg": ["Inter"],
+            "headline-lg-mobile": ["Inter"]
+          },
+          "fontSize": {
+            "headline-md": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+            "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.025em", "fontWeight": "500" }],
+            "mono-metric": ["24px", { "lineHeight": "28px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "mono-timestamp": ["10px", { "lineHeight": "12px", "letterSpacing": "0.04em", "fontWeight": "400" }],
+            "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+            "display": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.025em", "fontWeight": "700" }],
+            "body-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0em", "fontWeight": "400" }],
+            "mono-data": ["12px", { "lineHeight": "16px", "letterSpacing": "0em", "fontWeight": "500" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.005em", "fontWeight": "400" }],
+            "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400" }],
+            "headline-sm": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "headline-lg": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "headline-lg-mobile": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "600" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+      font-size: 18px;
+      line-height: 1;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    .material-symbols-outlined.fill {
+      font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+    }
+    @keyframes subtle-pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(1.15); }
+    }
+    .pulse-live {
+      animation: subtle-pulse 2s infinite ease-in-out;
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface antialiased h-full flex overflow-hidden">
+<!-- ==================== PERSISTENT LEFT SIDEBAR ==================== -->
+<aside class="fixed top-0 left-0 h-screen w-60 z-40 bg-surface-container-lowest border-r border-outline-variant flex flex-col justify-between p-4 select-none">
+<div class="flex flex-col gap-5">
+<!-- Brand & Header -->
+<div class="flex items-center gap-3 px-1 pt-1">
+<div class="w-8 h-8 rounded-lg bg-primary-container text-on-primary flex items-center justify-center font-bold font-headline-sm shadow-sm">
+<span class="material-symbols-outlined text-secondary-container fill">local_parking</span>
+</div>
+<div class="flex flex-col">
+<span class="text-headline-md font-headline-md tracking-tight font-bold text-on-surface leading-tight">ParkX Transit</span>
+<span class="text-label-sm font-label-sm text-on-surface-variant font-medium">GIS Operations Platform</span>
+</div>
+</div>
+<!-- Navigation Tabs (Shared Components Blueprint: 8 items, Administration is Active) -->
+<nav class="flex flex-col space-y-1 mt-2">
+<!-- 1. Overview -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-label-md font-label-md">Overview</span>
+</a>
+<!-- 2. Explore Map -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined">map</span>
+<span class="text-label-md font-label-md">Explore Map</span>
+</a>
+<!-- 3. Parking Availability -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined">local_parking</span>
+<span class="text-label-md font-label-md">Parking Availability</span>
+</a>
+<!-- 4. Availability Prediction -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined">timeline</span>
+<span class="text-label-md font-label-md">Availability Prediction</span>
+</a>
+<!-- 5. Parking Recommendations -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined">recommend</span>
+<span class="text-label-md font-label-md">Parking Recommendations</span>
+</a>
+<!-- 6. Public Transit -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined">directions_transit</span>
+<span class="text-label-md font-label-md">Public Transit</span>
+</a>
+<!-- 7. Analytics -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="text-label-md font-label-md">Analytics</span>
+</a>
+<!-- 8. Administration (ACTIVE MATCH) -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-surface-container-high text-on-surface font-semibold shadow-sm transition-colors duration-150 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined text-secondary fill">admin_panel_settings</span>
+<span class="text-label-md font-label-md text-secondary">Administration</span>
+</a>
+</nav>
+</div>
+<!-- Sidebar Bottom Anchors & Telemetry Engine Badge -->
+<div class="flex flex-col gap-3 pt-3 border-t border-outline-variant">
+<!-- Simulation Mode Action -->
+<div class="px-2 py-1.5 bg-surface-container-low rounded-lg border border-outline-variant flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-secondary-container pulse-live"></span>
+<span class="text-mono-timestamp font-mono-timestamp text-on-surface font-semibold">Simulation Mode</span>
+</div>
+<span class="text-mono-timestamp font-mono-timestamp text-secondary bg-surface-container-lowest px-1.5 py-0.5 rounded border border-outline-variant">ACTIVE</span>
+</div>
+<!-- Footer Tabs -->
+<div class="flex flex-col space-y-0.5">
+<a class="flex items-center gap-3 px-3 py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150" href="#">
+<span class="material-symbols-outlined text-on-surface-variant">sensors</span>
+<span class="text-label-md font-label-md">System Health</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150" href="#">
+<span class="material-symbols-outlined text-on-surface-variant">tune</span>
+<span class="text-label-md font-label-md">Settings</span>
+</a>
+</div>
+<!-- Version & Topology Descriptor -->
+<div class="px-2 pt-1 text-mono-timestamp font-mono-timestamp text-on-surface-variant">
+        v2.4.19-admin • Telemetry &amp; Edge Nodes
+      </div>
+</div>
+</aside>
+<!-- ==================== MAIN CONTENT WRAPPER ==================== -->
+<div class="pl-60 flex flex-col flex-1 h-screen overflow-hidden">
+<!-- ==================== TOP NAVIGATION BAR ==================== -->
+<header class="fixed top-0 right-0 left-60 h-14 z-30 bg-surface-container-lowest/95 backdrop-blur-md border-b border-outline-variant flex items-center justify-between px-6 shadow-sm select-none">
+<!-- Left: Breadcrumbs & Omnibar -->
+<div class="flex items-center gap-4 flex-1 max-w-2xl">
+<div class="flex items-center gap-1.5 text-label-md font-label-md text-on-surface-variant shrink-0">
+<span>GIS Operations</span>
+<span class="material-symbols-outlined text-outline">chevron_right</span>
+<span class="text-on-surface font-semibold">System Administration &amp; Edge Gateway Health</span>
+</div>
+<!-- Universal Geo/Node Search Input -->
+<div class="relative w-64 lg:w-72">
+<span class="material-symbols-outlined absolute left-2.5 top-2.5 text-on-surface-variant text-base pointer-events-none">search</span>
+<input class="w-full h-8 pl-8 pr-10 text-body-sm font-body-sm bg-surface-container-low border border-outline-variant rounded-md text-on-surface placeholder:text-outline focus:outline-none focus:ring-1 focus:ring-secondary focus:border-secondary transition-all" placeholder="Search edge gateways, nodes, IPs..." type="text"/>
+<span class="absolute right-2 top-2 px-1 text-mono-timestamp font-mono-timestamp text-outline bg-surface-container-lowest border border-outline-variant rounded">⌘K</span>
+</div>
+</div>
+<!-- Right: Telemetry Trust, Sync, Live Toggle, Actions, Operator -->
+<div class="flex items-center gap-3">
+<!-- Explicit Data Trust Badge -->
+<div class="hidden xl:flex items-center gap-2 px-2.5 py-1 rounded-full bg-surface-container-high border border-outline-variant text-label-sm font-label-sm text-secondary">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary pulse-live"></span>
+<span class="font-mono-timestamp font-mono-timestamp">SIMULATED DEMO DATA • 14:42:18 UTC</span>
+</div>
+<!-- Trailing Secondary: Sync Telemetry -->
+<button class="flex items-center gap-1.5 px-3 py-1.5 text-label-md font-label-md text-on-surface border border-outline-variant rounded hover:bg-surface-container-low transition-colors duration-150 active:scale-[0.98]">
+<span class="material-symbols-outlined text-sm">sync</span>
+<span>Sync Telemetry</span>
+</button>
+<!-- Trailing Primary Action: Simulation Live -->
+<div class="flex items-center gap-1.5 px-3 py-1.5 bg-primary text-on-primary rounded text-label-md font-label-md font-medium shadow-sm">
+<span class="w-2 h-2 rounded-full bg-tertiary-fixed pulse-live"></span>
+<span>Simulation Live</span>
+</div>
+<!-- Separator -->
+<div class="h-5 w-px bg-outline-variant"></div>
+<!-- Trailing Icons -->
+<button class="relative p-1 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low rounded transition-colors" title="Notifications">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-1 right-1 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="p-1 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low rounded transition-colors" title="Documentation &amp; Help">
+<span class="material-symbols-outlined">help</span>
+</button>
+<!-- Operator Avatar & Role Tag -->
+<div class="flex items-center gap-2 pl-2">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest border border-outline-variant overflow-hidden flex items-center justify-center text-secondary font-bold text-body-sm font-body-sm">
+<span>OP</span>
+</div>
+<div class="hidden lg:flex flex-col text-left">
+<span class="text-label-md font-label-md text-on-surface font-semibold leading-none">Muni Ops Lead</span>
+<span class="text-mono-timestamp font-mono-timestamp text-outline leading-none mt-1">SuperAdmin #884</span>
+</div>
+</div>
+</div>
+</header>
+<!-- ==================== BODY WORKBENCH CANVAS ==================== -->
+<main class="mt-14 flex-1 overflow-y-auto p-4 space-y-3.5 bg-background">
+<!-- ==================== SECTION 1: INFRASTRUCTURE & HEALTH KPI STRIP ==================== -->
+<section class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
+<!-- KPI Card 1: Gateway Fleet Status -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-3.5 flex flex-col justify-between shadow-sm">
+<div class="flex items-center justify-between">
+<span class="text-label-sm font-label-sm text-on-surface-variant font-medium uppercase tracking-wider">Gateway Nodes Deployed</span>
+<span class="flex items-center gap-1 text-label-sm font-label-sm px-1.5 py-0.5 rounded bg-surface-container-high text-secondary font-mono-timestamp">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary-fixed pulse-live"></span>
+              99.82% UPTIME
+            </span>
+</div>
+<div class="my-2 flex items-baseline gap-2">
+<span class="text-mono-metric font-mono-metric text-on-surface font-semibold">24</span>
+<span class="text-body-sm font-body-sm text-on-surface-variant">Gateways Live</span>
+</div>
+<div class="flex items-center gap-3 text-label-sm font-label-sm text-on-surface-variant pt-2 border-t border-outline-variant/60 font-mono-data">
+<span class="flex items-center gap-1 text-on-tertiary-container"><span class="w-1.5 h-1.5 rounded-full bg-on-tertiary-container"></span>22 Healthy</span>
+<span class="flex items-center gap-1 text-secondary"><span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>1 Degraded</span>
+<span class="flex items-center gap-1 text-outline"><span class="w-1.5 h-1.5 rounded-full bg-outline"></span>1 Maint</span>
+</div>
+</div>
+<!-- KPI Card 2: Live Telemetry Throughput -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-3.5 flex flex-col justify-between shadow-sm">
+<div class="flex items-center justify-between">
+<span class="text-label-sm font-label-sm text-on-surface-variant font-medium uppercase tracking-wider">Telemetry Ingestion Rate</span>
+<span class="text-mono-timestamp font-mono-timestamp px-1.5 py-0.5 rounded bg-surface-container text-on-surface-variant">MQTT / LoRaWAN</span>
+</div>
+<div class="my-2 flex items-baseline gap-2">
+<span class="text-mono-metric font-mono-metric text-on-surface font-semibold">1,420</span>
+<span class="text-body-sm font-body-sm text-on-surface-variant">pkts / sec</span>
+</div>
+<div class="flex items-center justify-between text-mono-timestamp font-mono-timestamp text-on-surface-variant pt-2 border-t border-outline-variant/60">
+<span>Avg Latency: <strong class="text-on-surface">1.2s</strong></span>
+<span>Packet Loss: <strong class="text-on-tertiary-container">0.04%</strong></span>
+</div>
+</div>
+<!-- KPI Card 3: Ingestion Pipeline Latency -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-3.5 flex flex-col justify-between shadow-sm">
+<div class="flex items-center justify-between">
+<span class="text-label-sm font-label-sm text-on-surface-variant font-medium uppercase tracking-wider">End-to-End Pipeline</span>
+<span class="text-mono-timestamp font-mono-timestamp px-1.5 py-0.5 rounded bg-surface-container-high text-secondary">TimescaleDB • Kafka</span>
+</div>
+<div class="my-2 flex items-baseline gap-2">
+<span class="text-mono-metric font-mono-metric text-on-surface font-semibold">42 ms</span>
+<span class="text-body-sm font-body-sm text-on-surface-variant">Edge to Storage</span>
+</div>
+<div class="flex items-center justify-between text-mono-timestamp font-mono-timestamp text-on-surface-variant pt-2 border-t border-outline-variant/60">
+<span>Kafka Queues: <strong class="text-on-surface">Nominal</strong></span>
+<span>Consumer Lag: <strong class="text-on-surface">&lt;2ms</strong></span>
+</div>
+</div>
+<!-- KPI Card 4: Security & TLS Certificate Status -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-3.5 flex flex-col justify-between shadow-sm">
+<div class="flex items-center justify-between">
+<span class="text-label-sm font-label-sm text-on-surface-variant font-medium uppercase tracking-wider">Zero Trust Edge Security</span>
+<span class="flex items-center gap-1 text-label-sm font-label-sm px-1.5 py-0.5 rounded bg-surface-container-high text-secondary font-mono-timestamp">
+<span class="material-symbols-outlined text-xs">verified_user</span>
+              mTLS v1.3
+            </span>
+</div>
+<div class="my-2 flex items-baseline gap-2">
+<span class="text-headline-md font-headline-md text-on-surface font-semibold">Valid &amp; Verified</span>
+<span class="text-body-sm font-body-sm text-on-tertiary-container font-mono-data">0 Anomalies</span>
+</div>
+<div class="flex items-center justify-between text-mono-timestamp font-mono-timestamp text-on-surface-variant pt-2 border-t border-outline-variant/60">
+<span>Rotated: 4d ago</span>
+<span>Renewal in: 26d</span>
+</div>
+</div>
+</section>
+<!-- ==================== SECTION 2: SPLIT WORKBENCH (TABLE & INSPECTOR) ==================== -->
+<section class="grid grid-cols-1 xl:grid-cols-12 gap-3.5">
+<!-- ==================== LEFT 8-COLS: FLEET INVENTORY TABLE ==================== -->
+<div class="xl:col-span-8 bg-surface-container-lowest border border-outline-variant rounded-lg flex flex-col shadow-sm overflow-hidden">
+<!-- Table Control Bar & Filters -->
+<div class="p-3 border-b border-outline-variant flex flex-col md:flex-row md:items-center justify-between gap-3 bg-surface-container-low/40">
+<div class="flex items-center gap-2">
+<span class="text-headline-sm font-headline-sm text-on-surface font-semibold">Edge Gateway Fleet</span>
+<span class="px-2 py-0.5 rounded-full text-mono-timestamp font-mono-timestamp bg-surface-container-highest text-on-surface-variant font-semibold">24 Nodes Registered</span>
+</div>
+<!-- Cluster & Status Filter Controls -->
+<div class="flex items-center flex-wrap gap-2">
+<!-- Cluster Select -->
+<div class="relative">
+<select class="h-8 pl-2.5 pr-7 text-label-md font-label-md bg-surface-container-lowest border border-outline-variant rounded text-on-surface focus:outline-none focus:ring-1 focus:ring-secondary">
+<option>All Municipal Clusters</option>
+<option selected="">Downtown Central Deck</option>
+<option>Tech Corridor West</option>
+<option>Riverfront Waterfront</option>
+<option>Transit Hub Multimodal</option>
+</select>
+</div>
+<!-- Status Segmented Controls -->
+<div class="flex items-center p-0.5 bg-surface-container-high rounded border border-outline-variant text-label-sm font-label-sm">
+<button class="px-2 py-1 rounded bg-surface-container-lowest text-on-surface font-semibold shadow-xs">All (24)</button>
+<button class="px-2 py-1 text-on-surface-variant hover:text-on-surface">Online (22)</button>
+<button class="px-2 py-1 text-on-surface-variant hover:text-on-surface">Degraded (1)</button>
+<button class="px-2 py-1 text-on-surface-variant hover:text-on-surface">Maint (1)</button>
+</div>
+<!-- Refresh Trigger -->
+<button class="p-1.5 border border-outline-variant rounded bg-surface-container-lowest text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low" title="Force Refresh Polling">
+<span class="material-symbols-outlined text-sm">refresh</span>
+</button>
+</div>
+</div>
+<!-- The Gateway Table -->
+<div class="overflow-x-auto flex-1">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-outline-variant bg-surface-container-low/60 text-label-sm font-label-sm text-on-surface-variant font-semibold uppercase tracking-wider">
+<th class="py-2.5 px-3.5">Node ID &amp; Facility Tag</th>
+<th class="py-2.5 px-3">Radio Protocol</th>
+<th class="py-2.5 px-3">Signal (RSSI)</th>
+<th class="py-2.5 px-3">Power Source</th>
+<th class="py-2.5 px-3">Firmware</th>
+<th class="py-2.5 px-3">Last Ping</th>
+<th class="py-2.5 px-3.5 text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/70 text-body-sm font-body-sm">
+<!-- Row 1: Selected Node (GW-PK101-NORTH) -->
+<tr class="bg-surface-container-high/40 hover:bg-surface-container-high/60 transition-colors">
+<td class="py-3 px-3.5">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-on-tertiary-container shadow-xs"></span>
+<div>
+<div class="font-mono-data font-mono-data font-bold text-on-surface flex items-center gap-1.5">
+                          GW-PK101-NORTH
+                          <span class="text-mono-timestamp px-1.5 py-0.2 rounded bg-surface-container-highest text-secondary border border-outline-variant">ACTIVE FOCUS</span>
+</div>
+<div class="text-label-sm font-label-sm text-on-surface-variant">Civic Center Multi-Level Deck</div>
+</div>
+</div>
+</td>
+<td class="py-3 px-3">
+<span class="text-mono-data font-mono-data text-on-surface block">LoRaWAN US915</span>
+<span class="text-mono-timestamp text-outline">Channel 0-7 • SF7BW125</span>
+</td>
+<td class="py-3 px-3">
+<div class="flex items-center gap-1.5">
+<div class="flex items-end gap-0.5 h-3.5">
+<span class="w-1 h-1.5 bg-on-tertiary-container rounded-xs"></span>
+<span class="w-1 h-2 bg-on-tertiary-container rounded-xs"></span>
+<span class="w-1 h-2.5 bg-on-tertiary-container rounded-xs"></span>
+<span class="w-1 h-3.5 bg-on-tertiary-container rounded-xs"></span>
+</div>
+<span class="font-mono-data font-mono-data text-on-surface">-68 dBm</span>
+</div>
+<span class="text-mono-timestamp text-on-tertiary-container font-semibold">Excellent SNR +11dB</span>
+</td>
+<td class="py-3 px-3 font-mono-data font-mono-data text-on-surface">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm text-secondary">power</span>
+<span>Mains 120V + UPS</span>
+</div>
+<span class="text-mono-timestamp text-outline">UPS Battery 100%</span>
+</td>
+<td class="py-3 px-3">
+<span class="font-mono-data font-mono-data text-on-surface">v3.8.4-edge</span>
+<span class="block text-mono-timestamp text-on-tertiary-container">Patched &amp; Verified</span>
+</td>
+<td class="py-3 px-3 font-mono-timestamp font-mono-timestamp text-on-surface-variant">
+<span class="text-on-surface font-semibold">1.2s ago</span>
+</td>
+<td class="py-3 px-3.5 text-right">
+<div class="inline-flex items-center gap-1">
+<button class="p-1 rounded text-on-surface-variant hover:text-secondary hover:bg-surface-container-high transition-colors" title="Diagnostics Modal">
+<span class="material-symbols-outlined text-sm">troubleshoot</span>
+</button>
+<button class="p-1 rounded text-on-surface-variant hover:text-secondary hover:bg-surface-container-high transition-colors" title="SSH Terminal Console">
+<span class="material-symbols-outlined text-sm">terminal</span>
+</button>
+<button class="p-1 rounded text-on-surface-variant hover:text-error hover:bg-surface-container-high transition-colors" title="Remote Reboot Node">
+<span class="material-symbols-outlined text-sm">restart_alt</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2: GW-PK104-CENTRAL -->
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-3 px-3.5">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-on-tertiary-container"></span>
+<div>
+<div class="font-mono-data font-mono-data font-bold text-on-surface">GW-PK104-CENTRAL</div>
+<div class="text-label-sm font-label-sm text-on-surface-variant">Metro Hub Multimodal Vault</div>
+</div>
+</div>
+</td>
+<td class="py-3 px-3">
+<span class="text-mono-data font-mono-data text-on-surface block">BACnet IP / Fiber</span>
+<span class="text-mono-timestamp text-outline">Subnet 10.42.12.0/24</span>
+</td>
+<td class="py-3 px-3">
+<div class="flex items-center gap-1.5">
+<div class="flex items-end gap-0.5 h-3.5">
+<span class="w-1 h-1.5 bg-on-tertiary-container rounded-xs"></span>
+<span class="w-1 h-2 bg-on-tertiary-container rounded-xs"></span>
+<span class="w-1 h-2.5 bg-on-tertiary-container rounded-xs"></span>
+<span class="w-1 h-3.5 bg-on-tertiary-container rounded-xs"></span>
+</div>
+<span class="font-mono-data font-mono-data text-on-surface">-72 dBm</span>
+</div>
+<span class="text-mono-timestamp text-on-tertiary-container">Good Signal</span>
+</td>
+<td class="py-3 px-3 font-mono-data font-mono-data text-on-surface">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm text-secondary">power</span>
+<span>Mains 120V Grid</span>
+</div>
+<span class="text-mono-timestamp text-outline">Direct Municipal Feed</span>
+</td>
+<td class="py-3 px-3">
+<span class="font-mono-data font-mono-data text-on-surface">v3.8.4-edge</span>
+<span class="block text-mono-timestamp text-on-tertiary-container">Patched &amp; Verified</span>
+</td>
+<td class="py-3 px-3 font-mono-timestamp font-mono-timestamp text-on-surface-variant">
+<span>2.4s ago</span>
+</td>
+<td class="py-3 px-3.5 text-right">
+<div class="inline-flex items-center gap-1">
+<button class="p-1 rounded text-on-surface-variant hover:text-secondary hover:bg-surface-container-high transition-colors" title="Diagnostics Modal">
+<span class="material-symbols-outlined text-sm">troubleshoot</span>
+</button>
+<button class="p-1 rounded text-on-surface-variant hover:text-secondary hover:bg-surface-container-high transition-colors" title="SSH Terminal Console">
+<span class="material-symbols-outlined text-sm">terminal</span>
+</button>
+<button class="p-1 rounded text-on-surface-variant hover:text-error hover:bg-surface-container-high transition-colors" title="Remote Reboot Node">
+<span class="material-symbols-outlined text-sm">restart_alt</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3: GW-PK108-SURF (Degraded Signal) -->
+<tr class="hover:bg-surface-container-low transition-colors bg-surface-container/20">
+<td class="py-3 px-3.5">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-secondary"></span>
+<div>
+<div class="font-mono-data font-mono-data font-bold text-on-surface">GW-PK108-SURF</div>
+<div class="text-label-sm font-label-sm text-on-surface-variant">West Tech Plaza Open Deck</div>
+</div>
+</div>
+</td>
+<td class="py-3 px-3">
+<span class="text-mono-data font-mono-data text-on-surface block">LoRaWAN US915</span>
+<span class="text-mono-timestamp text-outline">Channel 8-15 • SF10BW125</span>
+</td>
+<td class="py-3 px-3">
+<div class="flex items-center gap-1.5">
+<div class="flex items-end gap-0.5 h-3.5">
+<span class="w-1 h-1.5 bg-secondary rounded-xs"></span>
+<span class="w-1 h-2 bg-secondary rounded-xs"></span>
+<span class="w-1 h-1 bg-outline-variant rounded-xs"></span>
+<span class="w-1 h-1 bg-outline-variant rounded-xs"></span>
+</div>
+<span class="font-mono-data font-mono-data text-secondary">-104 dBm</span>
+</div>
+<span class="text-mono-timestamp text-secondary font-semibold">Marginal / Attenuated</span>
+</td>
+<td class="py-3 px-3 font-mono-data font-mono-data text-on-surface">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm text-secondary">solar_power</span>
+<span>Solar + LiFePO4</span>
+</div>
+<span class="text-mono-timestamp text-secondary">Battery 72% (Charging)</span>
+</td>
+<td class="py-3 px-3">
+<span class="font-mono-data font-mono-data text-on-surface">v3.7.2</span>
+<span class="block text-mono-timestamp text-secondary font-semibold">Update Pending</span>
+</td>
+<td class="py-3 px-3 font-mono-timestamp font-mono-timestamp text-on-surface-variant">
+<span class="text-secondary">12.8s ago</span>
+</td>
+<td class="py-3 px-3.5 text-right">
+<div class="inline-flex items-center gap-1">
+<button class="p-1 rounded text-on-surface-variant hover:text-secondary hover:bg-surface-container-high transition-colors" title="Diagnostics Modal">
+<span class="material-symbols-outlined text-sm">troubleshoot</span>
+</button>
+<button class="p-1 rounded text-on-surface-variant hover:text-secondary hover:bg-surface-container-high transition-colors" title="SSH Terminal Console">
+<span class="material-symbols-outlined text-sm">terminal</span>
+</button>
+<button class="p-1 rounded text-on-surface-variant hover:text-error hover:bg-surface-container-high transition-colors" title="Remote Reboot Node">
+<span class="material-symbols-outlined text-sm">restart_alt</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4: GW-PK112-RIVER -->
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-3 px-3.5">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-on-tertiary-container"></span>
+<div>
+<div class="font-mono-data font-mono-data font-bold text-on-surface">GW-PK112-RIVER</div>
+<div class="text-label-sm font-label-sm text-on-surface-variant">Riverfront Park &amp; Ride Lot 3</div>
+</div>
+</div>
+</td>
+<td class="py-3 px-3">
+<span class="text-mono-data font-mono-data text-on-surface block">Inductive Loop Serial</span>
+<span class="text-mono-timestamp text-outline">RS-485 Modbus RTU</span>
+</td>
+<td class="py-3 px-3">
+<div class="flex items-center gap-1.5">
+<div class="flex items-end gap-0.5 h-3.5">
+<span class="w-1 h-1.5 bg-on-tertiary-container rounded-xs"></span>
+<span class="w-1 h-2 bg-on-tertiary-container rounded-xs"></span>
+<span class="w-1 h-2.5 bg-on-tertiary-container rounded-xs"></span>
+<span class="w-1 h-1 bg-outline-variant rounded-xs"></span>
+</div>
+<span class="font-mono-data font-mono-data text-on-surface">-84 dBm</span>
+</div>
+<span class="text-mono-timestamp text-on-tertiary-container">Stable Signal</span>
+</td>
+<td class="py-3 px-3 font-mono-data font-mono-data text-on-surface">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm text-secondary">solar_power</span>
+<span>Solar Array PV</span>
+</div>
+<span class="text-mono-timestamp text-on-tertiary-container">Battery 94%</span>
+</td>
+<td class="py-3 px-3">
+<span class="font-mono-data font-mono-data text-on-surface">v3.8.4-edge</span>
+<span class="block text-mono-timestamp text-on-tertiary-container">Patched &amp; Verified</span>
+</td>
+<td class="py-3 px-3 font-mono-timestamp font-mono-timestamp text-on-surface-variant">
+<span>4.5s ago</span>
+</td>
+<td class="py-3 px-3.5 text-right">
+<div class="inline-flex items-center gap-1">
+<button class="p-1 rounded text-on-surface-variant hover:text-secondary hover:bg-surface-container-high transition-colors" title="Diagnostics Modal">
+<span class="material-symbols-outlined text-sm">troubleshoot</span>
+</button>
+<button class="p-1 rounded text-on-surface-variant hover:text-secondary hover:bg-surface-container-high transition-colors" title="SSH Terminal Console">
+<span class="material-symbols-outlined text-sm">terminal</span>
+</button>
+<button class="p-1 rounded text-on-surface-variant hover:text-error hover:bg-surface-container-high transition-colors" title="Remote Reboot Node">
+<span class="material-symbols-outlined text-sm">restart_alt</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 5: GW-PK115-PLAZA -->
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-3 px-3.5">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-on-tertiary-container"></span>
+<div>
+<div class="font-mono-data font-mono-data font-bold text-on-surface">GW-PK115-PLAZA</div>
+<div class="text-label-sm font-label-sm text-on-surface-variant">Plaza Point Underground Garage</div>
+</div>
+</div>
+</td>
+<td class="py-3 px-3">
+<span class="text-mono-data font-mono-data text-on-surface block">RTSP AI Stream</span>
+<span class="text-mono-timestamp text-outline">Edge ANPR Cam 1080p</span>
+</td>
+<td class="py-3 px-3">
+<div class="flex items-center gap-1.5">
+<div class="flex items-end gap-0.5 h-3.5">
+<span class="w-1 h-1.5 bg-on-tertiary-container rounded-xs"></span>
+<span class="w-1 h-2 bg-on-tertiary-container rounded-xs"></span>
+<span class="w-1 h-2.5 bg-on-tertiary-container rounded-xs"></span>
+<span class="w-1 h-3.5 bg-on-tertiary-container rounded-xs"></span>
+</div>
+<span class="font-mono-data font-mono-data text-on-surface">-71 dBm</span>
+</div>
+<span class="text-mono-timestamp text-on-tertiary-container">High Bandwidth</span>
+</td>
+<td class="py-3 px-3 font-mono-data font-mono-data text-on-surface">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm text-secondary">power</span>
+<span>PoE+ 802.3at</span>
+</div>
+<span class="text-mono-timestamp text-outline">28.4W Ingestion</span>
+</td>
+<td class="py-3 px-3">
+<span class="font-mono-data font-mono-data text-on-surface">v3.8.4-edge</span>
+<span class="block text-mono-timestamp text-on-tertiary-container">Patched &amp; Verified</span>
+</td>
+<td class="py-3 px-3 font-mono-timestamp font-mono-timestamp text-on-surface-variant">
+<span>1.8s ago</span>
+</td>
+<td class="py-3 px-3.5 text-right">
+<div class="inline-flex items-center gap-1">
+<button class="p-1 rounded text-on-surface-variant hover:text-secondary hover:bg-surface-container-high transition-colors" title="Diagnostics Modal">
+<span class="material-symbols-outlined text-sm">troubleshoot</span>
+</button>
+<button class="p-1 rounded text-on-surface-variant hover:text-secondary hover:bg-surface-container-high transition-colors" title="SSH Terminal Console">
+<span class="material-symbols-outlined text-sm">terminal</span>
+</button>
+<button class="p-1 rounded text-on-surface-variant hover:text-error hover:bg-surface-container-high transition-colors" title="Remote Reboot Node">
+<span class="material-symbols-outlined text-sm">restart_alt</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 6: GW-PK120-EAST (Scheduled Maintenance) -->
+<tr class="hover:bg-surface-container-low transition-colors bg-surface-container-low/20">
+<td class="py-3 px-3.5">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-outline"></span>
+<div>
+<div class="font-mono-data font-mono-data font-bold text-on-surface">GW-PK120-EAST</div>
+<div class="text-label-sm font-label-sm text-on-surface-variant">Harbor East Lot B Perimeter</div>
+</div>
+</div>
+</td>
+<td class="py-3 px-3">
+<span class="text-mono-data font-mono-data text-on-surface block">MQTT over Cellular</span>
+<span class="text-mono-timestamp text-outline">LTE-M / NB-IoT Sim 2</span>
+</td>
+<td class="py-3 px-3">
+<div class="flex items-center gap-1.5">
+<div class="flex items-end gap-0.5 h-3.5">
+<span class="w-1 h-1.5 bg-outline rounded-xs"></span>
+<span class="w-1 h-1 bg-outline-variant rounded-xs"></span>
+<span class="w-1 h-1 bg-outline-variant rounded-xs"></span>
+<span class="w-1 h-1 bg-outline-variant rounded-xs"></span>
+</div>
+<span class="font-mono-data font-mono-data text-outline">Standby</span>
+</div>
+<span class="text-mono-timestamp text-outline">Service Window Active</span>
+</td>
+<td class="py-3 px-3 font-mono-data font-mono-data text-on-surface">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm text-outline">power_off</span>
+<span>Mains Offline</span>
+</div>
+<span class="text-mono-timestamp text-outline">Isolated for recabling</span>
+</td>
+<td class="py-3 px-3">
+<span class="font-mono-data font-mono-data text-on-surface">v3.7.0</span>
+<span class="block text-mono-timestamp text-outline">Staged for v3.8.4</span>
+</td>
+<td class="py-3 px-3 font-mono-timestamp font-mono-timestamp text-outline">
+<span>18m ago</span>
+</td>
+<td class="py-3 px-3.5 text-right">
+<div class="inline-flex items-center gap-1">
+<button class="p-1 rounded text-on-surface-variant hover:text-secondary hover:bg-surface-container-high transition-colors" title="Diagnostics Modal">
+<span class="material-symbols-outlined text-sm">troubleshoot</span>
+</button>
+<button class="p-1 rounded text-on-surface-variant hover:text-secondary hover:bg-surface-container-high transition-colors" title="SSH Terminal Console">
+<span class="material-symbols-outlined text-sm">terminal</span>
+</button>
+<button class="p-1 rounded text-on-surface-variant hover:text-secondary hover:bg-surface-container-high transition-colors" title="Sensor Re-sync">
+<span class="material-symbols-outlined text-sm">sync</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Footer Pagination & Telemetry Frequency -->
+<div class="p-2.5 px-3.5 border-t border-outline-variant flex items-center justify-between text-mono-timestamp font-mono-timestamp text-on-surface-variant bg-surface-container-low/30">
+<div class="flex items-center gap-3">
+<span>Showing 6 of 24 Gateways</span>
+<span class="h-3 w-px bg-outline-variant"></span>
+<span>Next Global Health Heartbeat in: <strong class="text-on-surface">8.4s</strong></span>
+</div>
+<div class="flex items-center gap-2">
+<button class="px-2 py-1 rounded border border-outline-variant bg-surface-container-lowest text-on-surface hover:bg-surface-container-low disabled:opacity-40" disabled="">Previous</button>
+<button class="px-2 py-1 rounded border border-outline-variant bg-surface-container-lowest text-on-surface hover:bg-surface-container-low">Next</button>
+</div>
+</div>
+</div>
+<!-- ==================== RIGHT 4-COLS: ADMINISTRATIVE INSPECTOR & CONSOLE ==================== -->
+<div class="xl:col-span-4 space-y-3.5 flex flex-col">
+<!-- Deep Dive Inspector Panel: GW-PK101-NORTH -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-3.5 shadow-sm space-y-3">
+<div class="flex items-start justify-between">
+<div>
+<span class="text-label-sm font-label-sm text-secondary uppercase tracking-wider font-semibold">Node Inspector</span>
+<h3 class="text-headline-sm font-headline-sm text-on-surface font-semibold flex items-center gap-1.5 mt-0.5">
+                  GW-PK101-NORTH
+                  <span class="material-symbols-outlined text-sm text-on-tertiary-container fill">check_circle</span>
+</h3>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Civic Center Multi-Level Deck • Master Rail</p>
+</div>
+<button class="p-1 rounded text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low" title="Collapse Panel">
+<span class="material-symbols-outlined text-sm">unfold_less</span>
+</button>
+</div>
+<!-- Ingestion Sparkline Metric -->
+<div class="p-2.5 bg-surface-container-low rounded-lg border border-outline-variant">
+<div class="flex items-center justify-between mb-1">
+<span class="text-label-sm font-label-sm text-on-surface-variant font-medium">Ingestion Throughput (Last 60m)</span>
+<span class="text-mono-data font-mono-data text-on-surface font-semibold">91.4 pkts/min avg</span>
+</div>
+<!-- Simulated Sparkline Chart -->
+<div class="h-10 flex items-end gap-1 pt-2">
+<div class="flex-1 bg-secondary-container/40 hover:bg-secondary rounded-xs h-[45%] transition-all" title="14:00 - 42 pkts"></div>
+<div class="flex-1 bg-secondary-container/40 hover:bg-secondary rounded-xs h-[60%] transition-all" title="14:10 - 58 pkts"></div>
+<div class="flex-1 bg-secondary-container/40 hover:bg-secondary rounded-xs h-[75%] transition-all" title="14:20 - 74 pkts"></div>
+<div class="flex-1 bg-secondary-container/40 hover:bg-secondary rounded-xs h-[90%] transition-all" title="14:30 - 92 pkts"></div>
+<div class="flex-1 bg-secondary-container/60 hover:bg-secondary rounded-xs h-[85%] transition-all" title="14:40 - 88 pkts"></div>
+<div class="flex-1 bg-secondary hover:bg-secondary rounded-xs h-[98%] transition-all" title="14:50 - 99 pkts"></div>
+<div class="flex-1 bg-secondary-container/80 hover:bg-secondary rounded-xs h-[92%] transition-all" title="Current - 94 pkts"></div>
+</div>
+<div class="flex justify-between text-mono-timestamp font-mono-timestamp text-outline mt-1.5">
+<span>-60 min</span>
+<span>-30 min</span>
+<span>Live Feed</span>
+</div>
+</div>
+<!-- Connected Sub-Sensor Mesh Distribution -->
+<div>
+<span class="text-label-sm font-label-sm text-on-surface-variant font-medium block mb-2 uppercase tracking-wider">Connected Downstream Mesh</span>
+<div class="grid grid-cols-2 gap-2 text-label-sm font-label-sm">
+<div class="p-2 rounded bg-surface-container-low border border-outline-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-base">sensors</span>
+<div>
+<span class="font-mono-data font-mono-data font-bold text-on-surface block leading-tight">450</span>
+<span class="text-on-surface-variant text-mono-timestamp">Ultrasonic Bays</span>
+</div>
+</div>
+<div class="p-2 rounded bg-surface-container-low border border-outline-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-base">loop</span>
+<div>
+<span class="font-mono-data font-mono-data font-bold text-on-surface block leading-tight">4</span>
+<span class="text-on-surface-variant text-mono-timestamp">Loop Counters</span>
+</div>
+</div>
+<div class="p-2 rounded bg-surface-container-low border border-outline-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-base">badge</span>
+<div>
+<span class="font-mono-data font-mono-data font-bold text-on-surface block leading-tight">2</span>
+<span class="text-on-surface-variant text-mono-timestamp">RFID Gateways</span>
+</div>
+</div>
+<div class="p-2 rounded bg-surface-container-low border border-outline-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-base">thermostat</span>
+<div>
+<span class="font-mono-data font-mono-data font-bold text-on-surface block leading-tight">1</span>
+<span class="text-on-surface-variant text-mono-timestamp">Weather Station</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Compute Module Resource Utilization Meters -->
+<div class="space-y-2 pt-1">
+<span class="text-label-sm font-label-sm text-on-surface-variant font-medium block uppercase tracking-wider">Edge Host Compute (CM4 Embedded)</span>
+<!-- CPU -->
+<div>
+<div class="flex justify-between text-mono-timestamp font-mono-timestamp text-on-surface-variant mb-1">
+<span>ARM Cortex-A72 CPU</span>
+<span class="font-bold text-on-surface">24%</span>
+</div>
+<div class="w-full bg-surface-container-high rounded-full h-1.5 overflow-hidden">
+<div class="bg-secondary h-1.5 rounded-full" style="width: 24%"></div>
+</div>
+</div>
+<!-- RAM -->
+<div>
+<div class="flex justify-between text-mono-timestamp font-mono-timestamp text-on-surface-variant mb-1">
+<span>System Memory (LPDDR4)</span>
+<span class="font-bold text-on-surface">1.52 GB / 4.0 GB (38%)</span>
+</div>
+<div class="w-full bg-surface-container-high rounded-full h-1.5 overflow-hidden">
+<div class="bg-secondary h-1.5 rounded-full" style="width: 38%"></div>
+</div>
+</div>
+<!-- Storage -->
+<div>
+<div class="flex justify-between text-mono-timestamp font-mono-timestamp text-on-surface-variant mb-1">
+<span>eMMC Telemetry Log Ring</span>
+<span class="font-bold text-on-surface">4.48 GB / 32 GB (14%)</span>
+</div>
+<div class="w-full bg-surface-container-high rounded-full h-1.5 overflow-hidden">
+<div class="bg-on-tertiary-container h-1.5 rounded-full" style="width: 14%"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- RBAC & Security Audit Logs -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-3.5 shadow-sm space-y-2.5">
+<div class="flex items-center justify-between border-b border-outline-variant pb-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-base">security</span>
+<span class="text-label-sm font-label-sm font-semibold uppercase tracking-wider text-on-surface">Operator RBAC &amp; Audit Log</span>
+</div>
+<span class="text-mono-timestamp font-mono-timestamp text-on-tertiary-container bg-surface-container-low px-1.5 py-0.5 rounded border border-outline-variant">Privilege: #OP-884 SuperAdmin</span>
+</div>
+<div class="space-y-2 text-mono-timestamp font-mono-timestamp">
+<div class="p-2 rounded bg-surface-container-low border border-outline-variant/60 flex flex-col gap-0.5">
+<div class="flex items-center justify-between text-on-surface font-semibold">
+<span>#OP-884 • Remote Calibration</span>
+<span class="text-outline">14:38 UTC</span>
+</div>
+<p class="text-on-surface-variant">Calibrated PK-108 LoRaWAN channel frequency map.</p>
+</div>
+<div class="p-2 rounded bg-surface-container-low border border-outline-variant/60 flex flex-col gap-0.5">
+<div class="flex items-center justify-between text-on-surface font-semibold">
+<span>System Daemon • TLS Auto-Check</span>
+<span class="text-outline">14:15 UTC</span>
+</div>
+<p class="text-on-surface-variant">Validated 24 mutual client certs. 0 revokes detected.</p>
+</div>
+<div class="p-2 rounded bg-surface-container-low border border-outline-variant/60 flex flex-col gap-0.5">
+<div class="flex items-center justify-between text-on-surface font-semibold">
+<span>System Daemon • Nightly Backup</span>
+<span class="text-outline">04:00 UTC</span>
+</div>
+<p class="text-on-surface-variant">Completed snapshot to TimescaleDB replicated cluster.</p>
+</div>
+</div>
+</div>
+<!-- Edge Configuration & Simulation Controls Console -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-3.5 shadow-sm space-y-3">
+<div class="flex items-center justify-between">
+<span class="text-label-sm font-label-sm font-semibold uppercase tracking-wider text-on-surface flex items-center gap-1.5">
+<span class="material-symbols-outlined text-secondary text-sm">tune</span>
+                Edge Simulation Jitter Injection
+              </span>
+<span class="text-mono-timestamp font-mono-timestamp px-1.5 py-0.5 bg-secondary-container/20 text-secondary rounded">Chaos Engine</span>
+</div>
+<!-- Sliders for Chaos/Jitter testing -->
+<div class="space-y-2 text-label-sm font-label-sm">
+<div>
+<div class="flex justify-between text-mono-timestamp font-mono-timestamp mb-1">
+<span class="text-on-surface-variant">Simulated Network Jitter (± ms)</span>
+<span class="text-on-surface font-bold">18 ms</span>
+</div>
+<input class="w-full accent-secondary h-1 bg-surface-container-highest rounded" max="100" min="0" type="range" value="18"/>
+</div>
+<div>
+<div class="flex justify-between text-mono-timestamp font-mono-timestamp mb-1">
+<span class="text-on-surface-variant">Synthetic Packet Drop Injection</span>
+<span class="text-on-surface font-bold">0.04%</span>
+</div>
+<input class="w-full accent-secondary h-1 bg-surface-container-highest rounded" max="5" min="0" step="0.01" type="range" value="0.04"/>
+</div>
+</div>
+<!-- Emergency Municipal Lockdown Action -->
+<div class="pt-2 border-t border-outline-variant">
+<button class="w-full py-2 px-3 rounded bg-error-container text-on-error-container hover:bg-error hover:text-on-error font-label-md font-label-md font-semibold flex items-center justify-center gap-2 transition-colors active:scale-[0.98]">
+<span class="material-symbols-outlined text-sm">warning</span>
+<span>Broadcast Facility Alert / Lockdown Mode</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- ==================== SECTION 3: ACADEMIC PROTOTYPE GOVERNANCE NOTICE ==================== -->
+<footer class="bg-surface-container-low border border-outline-variant rounded-lg p-3 flex flex-col sm:flex-row items-center justify-between gap-3 text-label-sm font-label-sm text-on-surface-variant">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-secondary text-base">info</span>
+<span><strong>Notice:</strong> Edge node telemetry is connected to simulated municipal testbed loop feeds. Hardware commands execute in sandboxed digital twin environment.</span>
+</div>
+<div class="flex items-center gap-3 shrink-0 font-mono-timestamp font-mono-timestamp">
+<span>Simulation Engine: <strong>SimCity-GIS v2.4</strong></span>
+<span class="h-3 w-px bg-outline-variant"></span>
+<span class="text-secondary font-medium">Session ID: #SIM-2025-884A</span>
+</div>
+</footer>
+</main>
+</div>
+</body></html>

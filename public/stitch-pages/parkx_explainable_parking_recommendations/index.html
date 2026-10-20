@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ParkX Transit - Parking Recommendations</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 with Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config Verbatim -->
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-surface": "#0b1c30",
+            "inverse-on-surface": "#eaf1ff",
+            "primary-fixed-dim": "#bec6e0",
+            "tertiary-fixed": "#6ffbbe",
+            "secondary": "#006591",
+            "primary-fixed": "#dae2fd",
+            "on-secondary": "#ffffff",
+            "secondary-container": "#39b8fd",
+            "on-background": "#0b1c30",
+            "on-primary": "#ffffff",
+            "surface-container": "#e5eeff",
+            "surface-variant": "#d3e4fe",
+            "tertiary": "#000000",
+            "surface-container-high": "#dce9ff",
+            "primary": "#000000",
+            "primary-container": "#131b2e",
+            "surface-bright": "#f8f9ff",
+            "secondary-fixed-dim": "#89ceff",
+            "surface": "#f8f9ff",
+            "on-primary-fixed-variant": "#3f465c",
+            "on-tertiary-fixed-variant": "#005236",
+            "background": "#f8f9ff",
+            "on-secondary-fixed-variant": "#004c6e",
+            "tertiary-fixed-dim": "#4edea3",
+            "tertiary-container": "#002113",
+            "outline": "#76777d",
+            "surface-dim": "#cbdbf5",
+            "outline-variant": "#c6c6cd",
+            "on-primary-container": "#7c839b",
+            "on-error": "#ffffff",
+            "on-surface-variant": "#45464d",
+            "surface-tint": "#565e74",
+            "on-error-container": "#93000a",
+            "on-primary-fixed": "#131b2e",
+            "error": "#ba1a1a",
+            "error-container": "#ffdad6",
+            "inverse-surface": "#213145",
+            "on-secondary-fixed": "#001e2f",
+            "on-secondary-container": "#004666",
+            "on-tertiary-container": "#009668",
+            "surface-container-low": "#eff4ff",
+            "secondary-fixed": "#c9e6ff",
+            "on-tertiary-fixed": "#002113",
+            "surface-container-highest": "#d3e4fe",
+            "inverse-primary": "#bec6e0",
+            "surface-container-lowest": "#ffffff",
+            "on-tertiary": "#ffffff"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "space-lg": "1.25rem",
+            "space-xs": "0.25rem",
+            "gutter-compact": "0.5rem",
+            "space-sm": "0.5rem",
+            "margin-mobile": "0.75rem",
+            "space-xl": "1.75rem",
+            "gutter": "1rem",
+            "space-md": "0.75rem",
+            "margin": "1.5rem"
+          },
+          "fontFamily": {
+            "label-sm": [
+              "Inter"
+            ],
+            "headline-md": [
+              "Inter"
+            ],
+            "headline-sm": [
+              "Inter"
+            ],
+            "mono-timestamp": [
+              "JetBrains Mono"
+            ],
+            "mono-data": [
+              "JetBrains Mono"
+            ],
+            "label-md": [
+              "Inter"
+            ],
+            "body-sm": [
+              "Inter"
+            ],
+            "body-md": [
+              "Inter"
+            ],
+            "headline-lg-mobile": [
+              "Inter"
+            ],
+            "display": [
+              "Inter"
+            ],
+            "mono-metric": [
+              "JetBrains Mono"
+            ],
+            "headline-lg": [
+              "Inter"
+            ],
+            "body-lg": [
+              "Inter"
+            ]
+          },
+          "fontSize": {
+            "label-sm": [
+              "11px",
+              {
+                "lineHeight": "14px",
+                "letterSpacing": "0.025em",
+                "fontWeight": "500"
+              }
+            ],
+            "headline-md": [
+              "20px",
+              {
+                "lineHeight": "28px",
+                "letterSpacing": "-0.015em",
+                "fontWeight": "600"
+              }
+            ],
+            "headline-sm": [
+              "16px",
+              {
+                "lineHeight": "24px",
+                "letterSpacing": "-0.01em",
+                "fontWeight": "600"
+              }
+            ],
+            "mono-timestamp": [
+              "10px",
+              {
+                "lineHeight": "12px",
+                "letterSpacing": "0.04em",
+                "fontWeight": "400"
+              }
+            ],
+            "mono-data": [
+              "12px",
+              {
+                "lineHeight": "16px",
+                "letterSpacing": "0em",
+                "fontWeight": "500"
+              }
+            ],
+            "label-md": [
+              "12px",
+              {
+                "lineHeight": "16px",
+                "letterSpacing": "0.02em",
+                "fontWeight": "500"
+              }
+            ],
+            "body-sm": [
+              "12px",
+              {
+                "lineHeight": "16px",
+                "letterSpacing": "0em",
+                "fontWeight": "400"
+              }
+            ],
+            "body-md": [
+              "14px",
+              {
+                "lineHeight": "20px",
+                "letterSpacing": "0em",
+                "fontWeight": "400"
+              }
+            ],
+            "headline-lg-mobile": [
+              "22px",
+              {
+                "lineHeight": "28px",
+                "letterSpacing": "-0.015em",
+                "fontWeight": "600"
+              }
+            ],
+            "display": [
+              "36px",
+              {
+                "lineHeight": "44px",
+                "letterSpacing": "-0.025em",
+                "fontWeight": "700"
+              }
+            ],
+            "mono-metric": [
+              "24px",
+              {
+                "lineHeight": "28px",
+                "letterSpacing": "-0.02em",
+                "fontWeight": "600"
+              }
+            ],
+            "headline-lg": [
+              "28px",
+              {
+                "lineHeight": "36px",
+                "letterSpacing": "-0.02em",
+                "fontWeight": "600"
+              }
+            ],
+            "body-lg": [
+              "16px",
+              {
+                "lineHeight": "24px",
+                "letterSpacing": "-0.005em",
+                "fontWeight": "400"
+              }
+            ]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    @keyframes pulse-subtle {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(1.15); }
+    }
+    .pulse-dot {
+      animation: pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f8f9ff;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #c6c6cd;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface antialiased overflow-x-hidden">
+<!-- ========================================================= -->
+<!-- SHARED COMPONENT: SideNavBar (Strict JSON Execution)      -->
+<!-- ========================================================= -->
+<aside class="fixed top-0 left-0 h-screen w-60 z-40 bg-surface-container-lowest border-r border-outline-variant flex flex-col justify-between p-4">
+<div class="flex flex-col gap-4">
+<!-- Brand & Header -->
+<div class="flex items-center gap-3 px-2 py-1">
+<div class="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined text-[20px]" data-icon="local_parking">local_parking</span>
+</div>
+<div class="flex flex-col">
+<span class="text-headline-sm font-headline-sm tracking-tight font-bold text-on-surface">ParkX Transit</span>
+<span class="text-label-sm font-label-sm text-on-surface-variant">GIS Operations Platform</span>
+</div>
+</div>
+<!-- Mode Pill Indicator -->
+<div class="px-2">
+<div class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-surface-container border border-outline-variant/60 text-secondary font-medium text-label-sm">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-secondary pulse-dot"></span>
+<span>Simulation Mode</span>
+</div>
+<span class="font-mono-timestamp text-[9px] uppercase tracking-wider text-on-surface-variant font-semibold">Active</span>
+</div>
+</div>
+<!-- Main Navigation Tabs -->
+<nav class="flex flex-col gap-1 mt-2">
+<!-- 1. Overview -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150 active:scale-[0.98] transition-transform duration-100 ease-out text-label-md font-label-md" href="#">
+<span class="material-symbols-outlined text-[18px]" data-icon="dashboard">dashboard</span>
+<span>Overview</span>
+</a>
+<!-- 2. Explore Map -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150 active:scale-[0.98] transition-transform duration-100 ease-out text-label-md font-label-md" href="#">
+<span class="material-symbols-outlined text-[18px]" data-icon="map">map</span>
+<span>Explore Map</span>
+</a>
+<!-- 3. Parking Availability -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150 active:scale-[0.98] transition-transform duration-100 ease-out text-label-md font-label-md" href="#">
+<span class="material-symbols-outlined text-[18px]" data-icon="local_parking">local_parking</span>
+<span>Parking Availability</span>
+</a>
+<!-- 4. Availability Prediction -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150 active:scale-[0.98] transition-transform duration-100 ease-out text-label-md font-label-md" href="#">
+<span class="material-symbols-outlined text-[18px]" data-icon="timeline">timeline</span>
+<span>Availability Prediction</span>
+</a>
+<!-- 5. Parking Recommendations (ACTIVE SCREEN) -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-surface-container-high text-on-surface font-semibold hover:bg-surface-container-high active:scale-[0.98] transition-transform duration-100 ease-out text-label-md font-label-md" href="#">
+<span class="material-symbols-outlined text-[18px] text-secondary" data-icon="recommend" data-weight="fill" style="font-variation-settings: 'FILL' 1;">recommend</span>
+<span class="font-semibold text-secondary">Parking Recommendations</span>
+</a>
+<!-- 6. Public Transit -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150 active:scale-[0.98] transition-transform duration-100 ease-out text-label-md font-label-md" href="#">
+<span class="material-symbols-outlined text-[18px]" data-icon="directions_transit">directions_transit</span>
+<span>Public Transit</span>
+</a>
+<!-- 7. Analytics -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150 active:scale-[0.98] transition-transform duration-100 ease-out text-label-md font-label-md" href="#">
+<span class="material-symbols-outlined text-[18px]" data-icon="analytics">analytics</span>
+<span>Analytics</span>
+</a>
+<!-- 8. Administration -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150 active:scale-[0.98] transition-transform duration-100 ease-out text-label-md font-label-md" href="#">
+<span class="material-symbols-outlined text-[18px]" data-icon="admin_panel_settings">admin_panel_settings</span>
+<span>Administration</span>
+</a>
+</nav>
+</div>
+<!-- Footer System Actions -->
+<div class="flex flex-col gap-1 border-t border-outline-variant pt-3">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150 active:scale-[0.98] transition-transform duration-100 ease-out text-label-md font-label-md" href="#">
+<span class="material-symbols-outlined text-[18px]" data-icon="sensors">sensors</span>
+<span>System Health</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150 active:scale-[0.98] transition-transform duration-100 ease-out text-label-md font-label-md" href="#">
+<span class="material-symbols-outlined text-[18px]" data-icon="tune">tune</span>
+<span>Settings</span>
+</a>
+</div>
+</aside>
+<!-- ========================================================= -->
+<!-- SHARED COMPONENT: TopNavBar (Strict JSON Execution)       -->
+<!-- ========================================================= -->
+<header class="fixed top-0 right-0 left-60 h-14 z-30 bg-surface-container-lowest/95 backdrop-blur-md border-b border-outline-variant shadow-sm flex items-center justify-between px-6">
+<!-- Left Section: Search & Breadcrumbs -->
+<div class="flex items-center gap-6">
+<!-- GIS Quick Search -->
+<div class="relative w-80">
+<span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]" data-icon="search">search</span>
+</span>
+<input class="w-full h-8 pl-9 pr-12 bg-surface text-body-sm font-body-sm text-on-surface rounded-lg border border-outline-variant focus:outline-none focus:ring-1 focus:ring-secondary focus:border-secondary transition-all" placeholder="Search facilities, transit links, zones... (⌘K)" type="text"/>
+<div class="absolute inset-y-0 right-0 pr-2.5 flex items-center pointer-events-none">
+<kbd class="text-[10px] font-mono-timestamp bg-surface-container px-1.5 py-0.5 rounded border border-outline-variant/60 text-on-surface-variant">⌘K</kbd>
+</div>
+</div>
+<!-- Navigation Breadcrumb Links -->
+<div class="hidden xl:flex items-center gap-2 text-label-sm font-label-sm">
+<span class="text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer">Operations Hub</span>
+<span class="text-outline-variant">/</span>
+<span class="text-secondary font-semibold border-b-2 border-secondary pb-0.5">Parking Recommendations</span>
+</div>
+</div>
+<!-- Right Section: Actions & Telemetry -->
+<div class="flex items-center gap-3">
+<!-- Data Trust Badge (Simulated) -->
+<div class="flex items-center gap-2 px-2.5 py-1 rounded-full bg-purple-50 border border-purple-200 text-purple-900 font-mono-timestamp text-[11px]">
+<span class="w-1.5 h-1.5 rounded-full bg-purple-600"></span>
+<span class="italic font-semibold">SIMULATED DEMO DATA</span>
+<span class="text-purple-400">•</span>
+<span class="tracking-wide">14:36:40 UTC</span>
+</div>
+<!-- Primary & Secondary Trailing Actions -->
+<div class="flex items-center gap-2">
+<button class="h-8 px-3 rounded-lg border border-outline-variant bg-surface-container-lowest hover:bg-surface-container text-body-sm font-body-sm font-medium text-on-surface flex items-center gap-1.5 transition-colors active:scale-95">
+<span class="material-symbols-outlined text-[16px] text-secondary" data-icon="sync">sync</span>
+<span>Sync Telemetry</span>
+</button>
+<button class="h-8 px-3 rounded-lg bg-primary-container text-on-primary hover:bg-inverse-surface text-body-sm font-body-sm font-medium flex items-center gap-1.5 transition-colors shadow-sm active:scale-95">
+<span class="material-symbols-outlined text-[16px] text-tertiary-fixed" data-icon="play_circle">play_circle</span>
+<span>Simulation Live</span>
+</button>
+</div>
+<!-- Trailing Icon Actions -->
+<div class="flex items-center gap-1 pl-2 border-l border-outline-variant">
+<button class="w-8 h-8 rounded-lg flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" title="Notifications">
+<span class="material-symbols-outlined text-[20px]" data-icon="notifications">notifications</span>
+</button>
+<button class="w-8 h-8 rounded-lg flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" title="Help &amp; Documentation">
+<span class="material-symbols-outlined text-[20px]" data-icon="help">help</span>
+</button>
+<!-- User Avatar -->
+<div class="ml-1 flex items-center gap-2 pl-1 cursor-pointer">
+<div class="w-8 h-8 rounded-full bg-secondary/10 border border-secondary/30 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[20px]" data-icon="account_circle">account_circle</span>
+</div>
+</div>
+</div>
+</div>
+</header>
+<!-- ========================================================= -->
+<!-- MAIN WORKBENCH CONTENT CANVAS                              -->
+<!-- ========================================================= -->
+<main class="ml-60 pt-14 min-h-screen p-6 space-y-6">
+<!-- 1. HEADER & CONTEXT BANNER -->
+<section class="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-sm">
+<div class="flex flex-col xl:flex-row xl:items-center justify-between gap-4">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="px-2 py-0.5 rounded text-[10px] font-mono-timestamp uppercase bg-surface-container-high text-secondary font-semibold">MCDA Optimization Engine v4.2</span>
+<span class="text-outline-variant">•</span>
+<span class="text-label-sm font-label-sm text-on-surface-variant">Real-Time Spatial Telemetry</span>
+</div>
+<h1 class="text-headline-lg font-headline-lg text-on-surface tracking-tight">Explainable Parking Facility Recommendations &amp; Suitability Scoring</h1>
+<p class="text-body-md font-body-md text-on-surface-variant max-w-4xl mt-1">
+            Multi-criteria ranking engine synthesizing current sensor capacity, ML-predicted peak availability, spatial walking radius, tariff index, and onward public transit connectivity.
+          </p>
+</div>
+<!-- Destination & Horizon Context Pill -->
+<div class="flex items-center gap-2 p-2 rounded-xl bg-surface-container-low border border-outline-variant/80 shrink-0">
+<div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[20px]" data-icon="pin_drop">pin_drop</span>
+</div>
+<div class="flex flex-col pr-3">
+<span class="text-label-sm font-label-sm font-semibold text-on-surface">Target Destination: Central Civic Center &amp; Tech Hub</span>
+<div class="flex items-center gap-2 text-mono-timestamp font-mono-timestamp text-on-surface-variant">
+<span>Arrival Horizon: <strong class="text-secondary font-semibold">Today, 17:30</strong> (Peak Commute)</span>
+<span class="inline-block w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+</div>
+</div>
+<button class="h-8 px-3 rounded-lg border border-outline-variant bg-surface-container-lowest text-label-md font-label-md font-medium text-on-surface hover:bg-surface-container transition-colors">
+            Adjust Criteria
+          </button>
+</div>
+</div>
+</section>
+<!-- 2. USER PRIORITY & WEIGHT CONFIGURATION BAR -->
+<section class="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 shadow-sm space-y-3">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 border-b border-outline-variant/60 pb-3">
+<!-- Preset Filter Pills -->
+<div class="flex items-center gap-2 flex-wrap">
+<span class="text-label-sm font-label-sm font-semibold uppercase tracking-wider text-on-surface-variant mr-1">Presets:</span>
+<button class="px-3 py-1 rounded-full bg-primary-container text-on-primary text-label-md font-label-md font-semibold flex items-center gap-1.5 shadow-sm">
+<span class="material-symbols-outlined text-[15px] text-tertiary-fixed" data-icon="auto_awesome">auto_awesome</span>
+<span>Balanced Optimal (Recommended)</span>
+</button>
+<button class="px-3 py-1 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface text-label-md font-label-md transition-colors border border-outline-variant/40">
+            Closest to Destination
+          </button>
+<button class="px-3 py-1 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface text-label-md font-label-md transition-colors border border-outline-variant/40">
+            Highest Availability
+          </button>
+<button class="px-3 py-1 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface text-label-md font-label-md transition-colors border border-outline-variant/40">
+            Most Affordable / Low Tariff
+          </button>
+<button class="px-3 py-1 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface text-label-md font-label-md transition-colors border border-outline-variant/40">
+            Best Public Transit Access
+          </button>
+</div>
+<!-- Action Reset / Customize -->
+<div class="flex items-center gap-2">
+<button class="text-label-sm font-label-sm text-secondary hover:underline flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px]" data-icon="refresh">refresh</span>
+<span>Reset to Default (30/30/25/15)</span>
+</button>
+<button class="h-7 px-2.5 rounded-lg border border-outline-variant bg-surface hover:bg-surface-container text-label-sm font-label-sm font-medium text-on-surface flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px]" data-icon="tune">tune</span>
+<span>Customize Weights</span>
+</button>
+</div>
+</div>
+<!-- Formula Metrics Breakdown Chips -->
+<div class="grid grid-cols-2 md:grid-cols-5 gap-3 pt-1">
+<div class="bg-surface-container-low border border-outline-variant/60 rounded-lg p-2.5 flex items-center justify-between">
+<div class="flex flex-col">
+<span class="text-label-sm font-label-sm text-on-surface-variant">Current Availability</span>
+<span class="text-headline-sm font-headline-sm font-bold text-on-surface">30%</span>
+</div>
+<div class="w-8 h-8 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-mono-timestamp text-[11px] font-bold">W₁</div>
+</div>
+<div class="bg-surface-container-low border border-outline-variant/60 rounded-lg p-2.5 flex items-center justify-between">
+<div class="flex flex-col">
+<span class="text-label-sm font-label-sm text-on-surface-variant">Predicted (17:30)</span>
+<span class="text-headline-sm font-headline-sm font-bold text-on-surface">30%</span>
+</div>
+<div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center font-mono-timestamp text-[11px] font-bold">W₂</div>
+</div>
+<div class="bg-surface-container-low border border-outline-variant/60 rounded-lg p-2.5 flex items-center justify-between">
+<div class="flex flex-col">
+<span class="text-label-sm font-label-sm text-on-surface-variant">Distance to Target</span>
+<span class="text-headline-sm font-headline-sm font-bold text-on-surface">25%</span>
+</div>
+<div class="w-8 h-8 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center font-mono-timestamp text-[11px] font-bold">W₃</div>
+</div>
+<div class="bg-surface-container-low border border-outline-variant/60 rounded-lg p-2.5 flex items-center justify-between">
+<div class="flex flex-col">
+<span class="text-label-sm font-label-sm text-on-surface-variant">Parking Tariff</span>
+<span class="text-headline-sm font-headline-sm font-bold text-on-surface">15%</span>
+</div>
+<div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-mono-timestamp text-[11px] font-bold">W₄</div>
+</div>
+<div class="bg-emerald-50 border border-emerald-200 rounded-lg p-2.5 flex items-center justify-between col-span-2 md:col-span-1">
+<div class="flex flex-col">
+<div class="flex items-center gap-1">
+<span class="text-label-sm font-label-sm text-emerald-900 font-medium">Transit Synergy</span>
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+</div>
+<span class="text-headline-sm font-headline-sm font-bold text-emerald-800">+5.0 pts</span>
+</div>
+<span class="px-1.5 py-0.5 rounded bg-emerald-200 text-emerald-900 text-mono-timestamp font-bold">ACTIVE</span>
+</div>
+</div>
+</section>
+<!-- 3. TOP RECOMMENDATION HERO CARD (Rank #1 - Highest Suitability) -->
+<section class="bg-surface-container-lowest border-2 border-secondary/40 rounded-xl p-6 shadow-md relative overflow-hidden">
+<!-- Decorative Backdrop Element -->
+<div class="absolute -right-16 -top-16 w-64 h-64 bg-secondary/5 rounded-full blur-3xl pointer-events-none"></div>
+<div class="flex flex-col gap-5">
+<!-- Badge & Header Bar -->
+<div class="flex flex-wrap items-center justify-between gap-3 border-b border-outline-variant pb-4">
+<div class="flex items-center gap-3">
+<span class="px-3 py-1 rounded-md bg-secondary text-on-secondary text-label-md font-label-md font-bold tracking-wide flex items-center gap-1.5 shadow-sm">
+<span class="material-symbols-outlined text-[16px]" data-icon="star" data-weight="fill" style="font-variation-settings: 'FILL' 1;">star</span>
+<span>RANK #1 • 94.2/100 SUITABILITY SCORE</span>
+</span>
+<span class="px-2.5 py-0.5 rounded-full bg-emerald-100 border border-emerald-300 text-emerald-800 text-label-sm font-label-sm font-semibold uppercase tracking-wider">
+              OPTIMAL COMMUTER MATCH
+            </span>
+</div>
+<div class="flex items-center gap-2">
+<button class="h-8 px-3 rounded-lg border border-outline-variant bg-surface hover:bg-surface-container text-body-sm font-body-sm text-on-surface flex items-center gap-1.5 transition-colors">
+<span class="material-symbols-outlined text-[16px]" data-icon="grid_view">grid_view</span>
+<span>Compare in Grid</span>
+</button>
+<button class="h-8 px-3 rounded-lg border border-secondary text-secondary bg-surface-container-lowest hover:bg-surface-container text-body-sm font-body-sm font-medium flex items-center gap-1.5 transition-colors">
+<span class="material-symbols-outlined text-[16px]" data-icon="directions">directions</span>
+<span>View Journey Route</span>
+</button>
+<button class="h-8 px-4 rounded-lg bg-primary-container text-on-primary hover:bg-inverse-surface text-body-sm font-body-sm font-semibold flex items-center gap-1.5 transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[16px] text-tertiary-fixed" data-icon="check_circle">check_circle</span>
+<span>Select This Facility</span>
+</button>
+</div>
+</div>
+<!-- Facility Details & Key Metrics -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+<div class="lg:col-span-5 space-y-3">
+<div>
+<div class="flex items-center gap-2">
+<h2 class="text-headline-md font-headline-md text-on-surface font-bold">Civic Center North Deck (PK-101)</h2>
+<span class="text-mono-data font-mono-data text-on-surface-variant bg-surface-container px-2 py-0.5 rounded">Tier 1 Multi-Deck</span>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant flex items-center gap-1 mt-0.5">
+<span class="material-symbols-outlined text-[16px] text-secondary" data-icon="location_on">location_on</span>
+<span>140 Grand Civic Ave (Access via Gateway Blvd &amp; North Ramp)</span>
+</p>
+</div>
+<!-- Natural Language Recommendation Rationale -->
+<div class="p-3.5 rounded-lg bg-surface-container-low border-l-4 border-secondary text-body-sm font-body-sm text-on-surface">
+<span class="font-semibold text-secondary block mb-1">Recommendation Rationale:</span>
+              Top balanced recommendation due to immediate walking distance (350m) and seamless bus interchange, though predicted arrival after 17:15 risks tight bay availability. Consider booking bay or switching to Riverfront Park &amp; Ride.
+            </div>
+</div>
+<!-- Key Metrics Grid -->
+<div class="lg:col-span-7 grid grid-cols-2 sm:grid-cols-4 gap-3">
+<!-- Distance -->
+<div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant/60 flex flex-col justify-between">
+<span class="text-label-sm font-label-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px]" data-icon="directions_walk">directions_walk</span>
+<span>Distance</span>
+</span>
+<div class="mt-2">
+<span class="text-headline-sm font-headline-sm font-bold text-on-surface">350m</span>
+<span class="text-label-sm font-label-sm text-on-surface-variant block">4 min walk</span>
+</div>
+</div>
+<!-- Current Capacity -->
+<div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant/60 flex flex-col justify-between">
+<span class="text-label-sm font-label-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px] text-emerald-600" data-icon="sensors">sensors</span>
+<span>Current Free</span>
+</span>
+<div class="mt-2">
+<div class="flex items-baseline gap-1">
+<span class="text-headline-sm font-headline-sm font-bold text-on-surface">142</span>
+<span class="text-mono-data font-mono-data text-on-surface-variant">/ 450</span>
+</div>
+<div class="w-full bg-surface-container h-1.5 rounded-full mt-1.5 overflow-hidden">
+<div class="bg-amber-500 h-full rounded-full" style="width: 68.4%"></div>
+</div>
+<span class="text-[11px] font-mono-data text-amber-700 block mt-1">68.4% Occupied</span>
+</div>
+</div>
+<!-- Predicted Horizon (17:30) -->
+<div class="p-3 rounded-lg bg-amber-50/60 border border-amber-200 flex flex-col justify-between">
+<span class="text-label-sm font-label-sm text-amber-900 font-medium flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px] text-amber-600" data-icon="schedule">schedule</span>
+<span>ML at 17:30</span>
+</span>
+<div class="mt-2">
+<span class="text-headline-sm font-headline-sm font-bold text-amber-950">62 free bays</span>
+<div class="w-full bg-amber-200 h-1.5 rounded-full mt-1.5 overflow-hidden">
+<div class="bg-error h-full rounded-full" style="width: 86.2%"></div>
+</div>
+<span class="text-[10px] font-mono-timestamp text-error font-semibold block mt-1">Congestion Risk Warning</span>
+</div>
+</div>
+<!-- Tariff & Transit -->
+<div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant/60 flex flex-col justify-between">
+<span class="text-label-sm font-label-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px]" data-icon="payments">payments</span>
+<span>Hourly Tariff</span>
+</span>
+<div class="mt-2">
+<span class="text-headline-sm font-headline-sm font-bold text-on-surface">$3.50<span class="text-body-sm font-body-sm text-on-surface-variant font-normal">/hr</span></span>
+<span class="text-[11px] font-label-sm text-secondary font-medium block mt-1">Route 42 &amp; Exp 10</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Explainable Scoring Breakdown Bar -->
+<div class="p-4 rounded-xl bg-surface border border-outline-variant/80 space-y-2.5">
+<div class="flex items-center justify-between text-label-sm font-label-sm">
+<span class="font-bold uppercase tracking-wider text-on-surface flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-secondary" data-icon="analytics">analytics</span>
+<span>Suitability Decomposition (Total: 94.2 / 100)</span>
+</span>
+<span class="text-mono-timestamp font-mono-timestamp text-on-surface-variant">Normalized Weighted Sum Method</span>
+</div>
+<!-- Stacked Progress Bar -->
+<div class="w-full h-3 bg-surface-container rounded-full overflow-hidden flex">
+<div class="bg-blue-600 h-full" style="width: 28.2%" title="Current Capacity: +28.2 pts"></div>
+<div class="bg-indigo-600 h-full" style="width: 24.0%" title="ML Horizon: +24.0 pts"></div>
+<div class="bg-amber-500 h-full" style="width: 23.5%" title="Spatial Proximity: +23.5 pts"></div>
+<div class="bg-emerald-600 h-full" style="width: 13.5%" title="Tariff Fairness: +13.5 pts"></div>
+<div class="bg-teal-500 h-full" style="width: 5.0%" title="Transit Synergy Bonus: +5.0 pts"></div>
+</div>
+<!-- Segment Legends -->
+<div class="grid grid-cols-2 sm:grid-cols-5 gap-2 pt-1 text-mono-data font-mono-data text-[11px]">
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 rounded bg-blue-600 shrink-0"></span>
+<span class="text-on-surface-variant">Capacity: <strong class="text-on-surface">+28.2</strong></span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 rounded bg-indigo-600 shrink-0"></span>
+<span class="text-on-surface-variant">ML Horizon: <strong class="text-on-surface">+24.0</strong></span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 rounded bg-amber-500 shrink-0"></span>
+<span class="text-on-surface-variant">Proximity: <strong class="text-on-surface">+23.5</strong></span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 rounded bg-emerald-600 shrink-0"></span>
+<span class="text-on-surface-variant">Tariff: <strong class="text-on-surface">+13.5</strong></span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 rounded bg-teal-500 shrink-0"></span>
+<span class="text-on-surface-variant">Transit Synergy: <strong class="text-teal-700">+5.0</strong></span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 4. RANKED RECOMMENDATION CARDS (Rank #2, Rank #3, Rank #4) -->
+<section class="space-y-4">
+<div class="flex items-center justify-between">
+<h2 class="text-headline-sm font-headline-sm text-on-surface font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px] text-secondary" data-icon="format_list_numbered">format_list_numbered</span>
+<span>Alternative Candidate Facilities</span>
+</h2>
+<span class="text-label-sm font-label-sm text-on-surface-variant">Sorted by composite MCDA suitability rank</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+<!-- RANK #2: Riverfront Park & Ride -->
+<div class="bg-surface-container-lowest border border-outline-variant hover:border-secondary/40 rounded-xl p-5 shadow-sm transition-all flex flex-col justify-between">
+<div class="space-y-3">
+<div class="flex items-center justify-between">
+<span class="px-2.5 py-0.5 rounded bg-surface-container-high text-secondary font-mono-timestamp font-bold text-[11px]">
+                RANK #2 • 89.6 / 100
+              </span>
+<span class="px-2 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-[10px] font-semibold">
+                High Confidence
+              </span>
+</div>
+<div>
+<h3 class="text-headline-sm font-headline-sm text-on-surface font-semibold">Riverfront Park &amp; Ride (PK-112)</h3>
+<span class="text-label-sm font-label-sm text-emerald-800 font-medium block">Best Future Availability &amp; Budget Value</span>
+</div>
+<!-- Metrics -->
+<div class="space-y-2 pt-2 border-t border-outline-variant/60 text-body-sm font-body-sm">
+<div class="flex justify-between items-center">
+<span class="text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px]" data-icon="straighten">straighten</span>
+<span>Direct Distance:</span>
+</span>
+<span class="font-mono-data font-semibold text-on-surface">1.2 km (Transit connected)</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px]" data-icon="local_parking">local_parking</span>
+<span>Current Free:</span>
+</span>
+<span class="font-mono-data font-semibold text-emerald-700">390 / 600 (35% occ)</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px]" data-icon="schedule">schedule</span>
+<span>Predicted at 17:30:</span>
+</span>
+<span class="font-mono-data font-semibold text-emerald-700">372 bays (38% occ)</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px]" data-icon="payments">payments</span>
+<span>Tariff:</span>
+</span>
+<span class="font-mono-data font-bold text-on-surface">$1.50/hr (Lowest cost)</span>
+</div>
+</div>
+<!-- Transit Badge -->
+<div class="p-2.5 rounded-lg bg-surface-container-low border border-outline-variant/60 text-[11px] text-on-surface-variant">
+<div class="flex items-center gap-1 text-secondary font-semibold mb-0.5">
+<span class="material-symbols-outlined text-[14px]" data-icon="directions_bus">directions_bus</span>
+<span>Express Bus 10 (Platform A)</span>
+</div>
+              Departs every 4 mins • 6-min dedicated direct connection to Civic Center.
+            </div>
+<!-- Mini Contribution Breakdown -->
+<div class="pt-1 text-[11px] font-mono-data text-on-surface-variant flex justify-between">
+<span>Avail: 30.0</span>
+<span>Pred: 29.5</span>
+<span>Prox: 14.0</span>
+<span>Tariff: 15.0</span>
+<span class="text-emerald-700 font-bold">+1.1</span>
+</div>
+</div>
+<div class="pt-4 border-t border-outline-variant/60 flex items-center gap-2 mt-4">
+<button class="flex-1 h-8 rounded-lg border border-outline-variant hover:bg-surface-container text-body-sm font-body-sm font-medium text-on-surface transition-colors">
+              Multimodal Route
+            </button>
+<button class="h-8 px-3 rounded-lg bg-surface-container-high text-secondary hover:bg-secondary hover:text-on-secondary text-body-sm font-body-sm font-semibold transition-colors">
+              Select
+            </button>
+</div>
+</div>
+<!-- RANK #3: Metro Hub Underground -->
+<div class="bg-surface-container-lowest border border-outline-variant hover:border-secondary/40 rounded-xl p-5 shadow-sm transition-all flex flex-col justify-between">
+<div class="space-y-3">
+<div class="flex items-center justify-between">
+<span class="px-2.5 py-0.5 rounded bg-surface-container-high text-secondary font-mono-timestamp font-bold text-[11px]">
+                RANK #3 • 84.1 / 100
+              </span>
+<span class="px-2 py-0.5 rounded-full bg-blue-50 border border-blue-200 text-blue-800 text-[10px] font-semibold">
+                Protected Walk
+              </span>
+</div>
+<div>
+<h3 class="text-headline-sm font-headline-sm text-on-surface font-semibold">Metro Hub Underground (PK-104)</h3>
+<span class="text-label-sm font-label-sm text-secondary font-medium block">Direct Weather-Protected Access</span>
+</div>
+<!-- Metrics -->
+<div class="space-y-2 pt-2 border-t border-outline-variant/60 text-body-sm font-body-sm">
+<div class="flex justify-between items-center">
+<span class="text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px]" data-icon="straighten">straighten</span>
+<span>Distance:</span>
+</span>
+<span class="font-mono-data font-semibold text-on-surface">520m (6 min walk)</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px]" data-icon="local_parking">local_parking</span>
+<span>Current Free:</span>
+</span>
+<span class="font-mono-data font-semibold text-amber-700">88 / 320 (72.5% occ)</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px]" data-icon="schedule">schedule</span>
+<span>Predicted at 17:30:</span>
+</span>
+<span class="font-mono-data font-semibold text-amber-700">~60 bays (81.2% occ)</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px]" data-icon="payments">payments</span>
+<span>Tariff:</span>
+</span>
+<span class="font-mono-data font-bold text-on-surface">$2.50/hr</span>
+</div>
+</div>
+<!-- Transit Badge -->
+<div class="p-2.5 rounded-lg bg-surface-container-low border border-outline-variant/60 text-[11px] text-on-surface-variant">
+<div class="flex items-center gap-1 text-secondary font-semibold mb-0.5">
+<span class="material-symbols-outlined text-[14px]" data-icon="subway">subway</span>
+<span>Metro Red Line &amp; Route 42</span>
+</div>
+              Direct concourse underground tunnel walk to Tech Hub concourse.
+            </div>
+<!-- Mini Contribution Breakdown -->
+<div class="pt-1 text-[11px] font-mono-data text-on-surface-variant flex justify-between">
+<span>Avail: 22.5</span>
+<span>Pred: 21.0</span>
+<span>Prox: 22.0</span>
+<span>Tariff: 13.6</span>
+<span class="text-emerald-700 font-bold">+5.0</span>
+</div>
+</div>
+<div class="pt-4 border-t border-outline-variant/60 flex items-center gap-2 mt-4">
+<button class="flex-1 h-8 rounded-lg border border-outline-variant hover:bg-surface-container text-body-sm font-body-sm font-medium text-on-surface transition-colors">
+              Concourse Path
+            </button>
+<button class="h-8 px-3 rounded-lg bg-surface-container-high text-secondary hover:bg-secondary hover:text-on-secondary text-body-sm font-body-sm font-semibold transition-colors">
+              Select
+            </button>
+</div>
+</div>
+<!-- RANK #4: West Tech Plaza Surface Lot -->
+<div class="bg-surface-container-lowest border border-error/40 hover:border-error rounded-xl p-5 shadow-sm transition-all flex flex-col justify-between">
+<div class="space-y-3">
+<div class="flex items-center justify-between">
+<span class="px-2.5 py-0.5 rounded bg-error-container text-error font-mono-timestamp font-bold text-[11px]">
+                RANK #4 • 58.4 / 100
+              </span>
+<span class="px-2 py-0.5 rounded-full bg-rose-50 border border-rose-200 text-rose-800 text-[10px] font-semibold">
+                Critical Ineligibility Risk
+              </span>
+</div>
+<div>
+<h3 class="text-headline-sm font-headline-sm text-on-surface font-semibold">West Tech Plaza Surface Lot (PK-108)</h3>
+<span class="text-label-sm font-label-sm text-error font-medium block">High Congestion Warning</span>
+</div>
+<!-- Metrics -->
+<div class="space-y-2 pt-2 border-t border-outline-variant/60 text-body-sm font-body-sm">
+<div class="flex justify-between items-center">
+<span class="text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px]" data-icon="straighten">straighten</span>
+<span>Distance:</span>
+</span>
+<span class="font-mono-data font-semibold text-emerald-700">180m (2 min walk)</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px]" data-icon="local_parking">local_parking</span>
+<span>Current Free:</span>
+</span>
+<span class="font-mono-data font-semibold text-error">12 / 180 (93.3% occ)</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px]" data-icon="schedule">schedule</span>
+<span>Predicted at 17:30:</span>
+</span>
+<span class="font-mono-data font-semibold text-error">2 bays (98.9% occ)</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px]" data-icon="payments">payments</span>
+<span>Tariff:</span>
+</span>
+<span class="font-mono-data font-bold text-on-surface">$4.00/hr (Highest)</span>
+</div>
+</div>
+<!-- Transit Badge -->
+<div class="p-2.5 rounded-lg bg-rose-50 border border-rose-200 text-[11px] text-rose-900">
+<div class="flex items-center gap-1 font-semibold mb-0.5 text-error">
+<span class="material-symbols-outlined text-[14px]" data-icon="warning">warning</span>
+<span>Critical Arrival Risk</span>
+</div>
+              Severely constrained bays; parking arrival after 17:15 risks total lot saturation.
+            </div>
+<!-- Mini Contribution Breakdown -->
+<div class="pt-1 text-[11px] font-mono-data text-on-surface-variant flex justify-between">
+<span class="text-error font-semibold">Avail: 3.2</span>
+<span class="text-error font-semibold">Pred: 0.8</span>
+<span>Prox: 24.8</span>
+<span>Tariff: 4.6</span>
+<span class="text-on-surface-variant">+0.0</span>
+</div>
+</div>
+<div class="pt-4 border-t border-outline-variant/60 flex items-center gap-2 mt-4">
+<button class="flex-1 h-8 rounded-lg border border-outline-variant text-body-sm font-body-sm font-medium text-on-surface-variant opacity-75 cursor-not-allowed">
+              Not Recommended
+            </button>
+<button class="h-8 px-3 rounded-lg border border-outline-variant text-on-surface hover:bg-surface-container text-body-sm font-body-sm font-medium transition-colors">
+              Details
+            </button>
+</div>
+</div>
+</div>
+</section>
+<!-- 5. SIDE-BY-SIDE FACILITY COMPARISON TABLE -->
+<section class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden shadow-sm">
+<div class="p-4 border-b border-outline-variant flex items-center justify-between">
+<div>
+<h2 class="text-headline-sm font-headline-sm text-on-surface font-bold">Side-by-Side Facility Evaluation Matrix</h2>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Comparative criteria metrics across candidate facilities within 2 km destination radius.</p>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-label-sm font-label-sm text-on-surface-variant">Export:</span>
+<button class="h-7 px-2.5 rounded border border-outline-variant bg-surface text-label-sm font-label-sm hover:bg-surface-container font-mono-data">CSV</button>
+<button class="h-7 px-2.5 rounded border border-outline-variant bg-surface text-label-sm font-label-sm hover:bg-surface-container font-mono-data">GeoJSON</button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse text-body-sm font-body-sm">
+<thead>
+<tr class="bg-surface-container border-b border-outline-variant text-label-sm font-label-sm text-on-surface-variant uppercase tracking-wider">
+<th class="py-3 px-4">Rank &amp; Facility</th>
+<th class="py-3 px-4">Suitability Score</th>
+<th class="py-3 px-4">Current Availability</th>
+<th class="py-3 px-4">Predicted at 17:30</th>
+<th class="py-3 px-4">Distance &amp; Walk</th>
+<th class="py-3 px-4">Hourly Tariff</th>
+<th class="py-3 px-4">Transit Synergy</th>
+<th class="py-3 px-4">Primary Factor Rationale</th>
+<th class="py-3 px-4 text-right">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/60 font-mono-data text-body-sm">
+<!-- Row 1: PK-101 -->
+<tr class="bg-surface-container-lowest hover:bg-surface-container-low/70 transition-colors">
+<td class="py-3 px-4 font-sans">
+<div class="flex items-center gap-2">
+<span class="w-6 h-6 rounded bg-secondary text-on-secondary font-bold text-[11px] flex items-center justify-center">#1</span>
+<div>
+<span class="font-bold text-on-surface block text-body-md">Civic Center North Deck</span>
+<span class="text-label-sm text-on-surface-variant font-mono-data">PK-101 • Tier 1 Multi-Deck</span>
+</div>
+</div>
+</td>
+<td class="py-3 px-4">
+<div class="flex items-center gap-1.5">
+<span class="text-headline-sm font-bold text-secondary">94.2</span>
+<span class="text-label-sm text-on-surface-variant">/ 100</span>
+</div>
+</td>
+<td class="py-3 px-4">
+<span class="font-semibold text-on-surface">142</span> / 450
+                <span class="text-[11px] text-amber-700 block font-normal">(68.4% occ)</span>
+</td>
+<td class="py-3 px-4">
+<div class="flex flex-col">
+<span class="font-bold text-amber-900">62 bays</span>
+<span class="text-[10px] text-error font-sans font-semibold">Congestion Risk</span>
+</div>
+</td>
+<td class="py-3 px-4">
+<span class="font-semibold text-on-surface">350m</span>
+<span class="text-[11px] text-on-surface-variant block font-sans">4 min walk</span>
+</td>
+<td class="py-3 px-4 font-bold text-on-surface">$3.50/hr</td>
+<td class="py-3 px-4 font-sans">
+<span class="px-2 py-0.5 rounded bg-surface-container text-secondary text-label-sm font-semibold">Bus 42 &amp; Exp 10</span>
+</td>
+<td class="py-3 px-4 font-sans text-on-surface-variant text-label-sm max-w-xs">
+                Optimal spatial proximity and direct headway interchange.
+              </td>
+<td class="py-3 px-4 text-right">
+<button class="px-3 py-1 rounded bg-secondary text-on-secondary font-sans font-semibold text-label-sm hover:bg-secondary/90 transition-all">Select</button>
+</td>
+</tr>
+<!-- Row 2: PK-112 -->
+<tr class="bg-surface-container-lowest hover:bg-surface-container-low/70 transition-colors">
+<td class="py-3 px-4 font-sans">
+<div class="flex items-center gap-2">
+<span class="w-6 h-6 rounded bg-surface-container-high text-on-surface font-bold text-[11px] flex items-center justify-center">#2</span>
+<div>
+<span class="font-bold text-on-surface block text-body-md">Riverfront Park &amp; Ride</span>
+<span class="text-label-sm text-on-surface-variant font-mono-data">PK-112 • Commuter Intermodal</span>
+</div>
+</div>
+</td>
+<td class="py-3 px-4">
+<div class="flex items-center gap-1.5">
+<span class="text-headline-sm font-bold text-on-surface">89.6</span>
+<span class="text-label-sm text-on-surface-variant">/ 100</span>
+</div>
+</td>
+<td class="py-3 px-4">
+<span class="font-semibold text-emerald-700">390</span> / 600
+                <span class="text-[11px] text-emerald-700 block font-normal">(35.0% occ)</span>
+</td>
+<td class="py-3 px-4">
+<div class="flex flex-col">
+<span class="font-bold text-emerald-800">372 bays</span>
+<span class="text-[10px] text-emerald-700 font-sans font-semibold">High Capacity</span>
+</div>
+</td>
+<td class="py-3 px-4">
+<span class="font-semibold text-on-surface">1.2 km</span>
+<span class="text-[11px] text-secondary block font-sans font-medium">6 min dedicated bus</span>
+</td>
+<td class="py-3 px-4 font-bold text-emerald-700">$1.50/hr</td>
+<td class="py-3 px-4 font-sans">
+<span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-label-sm font-semibold">Express 10 (4 min hdwy)</span>
+</td>
+<td class="py-3 px-4 font-sans text-on-surface-variant text-label-sm max-w-xs">
+                Unbeatable capacity reserve &amp; lowest tariff; seamless shuttle link.
+              </td>
+<td class="py-3 px-4 text-right">
+<button class="px-3 py-1 rounded border border-outline-variant font-sans font-medium text-label-sm hover:bg-surface-container transition-all">Select</button>
+</td>
+</tr>
+<!-- Row 3: PK-104 -->
+<tr class="bg-surface-container-lowest hover:bg-surface-container-low/70 transition-colors">
+<td class="py-3 px-4 font-sans">
+<div class="flex items-center gap-2">
+<span class="w-6 h-6 rounded bg-surface-container-high text-on-surface font-bold text-[11px] flex items-center justify-center">#3</span>
+<div>
+<span class="font-bold text-on-surface block text-body-md">Metro Hub Underground</span>
+<span class="text-label-sm text-on-surface-variant font-mono-data">PK-104 • Sub-surface Vault</span>
+</div>
+</div>
+</td>
+<td class="py-3 px-4">
+<div class="flex items-center gap-1.5">
+<span class="text-headline-sm font-bold text-on-surface">84.1</span>
+<span class="text-label-sm text-on-surface-variant">/ 100</span>
+</div>
+</td>
+<td class="py-3 px-4">
+<span class="font-semibold text-amber-700">88</span> / 320
+                <span class="text-[11px] text-amber-700 block font-normal">(72.5% occ)</span>
+</td>
+<td class="py-3 px-4">
+<div class="flex flex-col">
+<span class="font-bold text-amber-900">~60 bays</span>
+<span class="text-[10px] text-amber-800 font-sans font-semibold">Filling Fast</span>
+</div>
+</td>
+<td class="py-3 px-4">
+<span class="font-semibold text-on-surface">520m</span>
+<span class="text-[11px] text-on-surface-variant block font-sans">6 min protected walk</span>
+</td>
+<td class="py-3 px-4 font-bold text-on-surface">$2.50/hr</td>
+<td class="py-3 px-4 font-sans">
+<span class="px-2 py-0.5 rounded bg-surface-container text-secondary text-label-sm font-semibold">Metro Red Line</span>
+</td>
+<td class="py-3 px-4 font-sans text-on-surface-variant text-label-sm max-w-xs">
+                Weatherproof indoor concourse access directly into tech offices.
+              </td>
+<td class="py-3 px-4 text-right">
+<button class="px-3 py-1 rounded border border-outline-variant font-sans font-medium text-label-sm hover:bg-surface-container transition-all">Select</button>
+</td>
+</tr>
+<!-- Row 4: PK-108 -->
+<tr class="bg-surface-container-lowest hover:bg-surface-container-low/70 transition-colors">
+<td class="py-3 px-4 font-sans">
+<div class="flex items-center gap-2">
+<span class="w-6 h-6 rounded bg-rose-100 text-error font-bold text-[11px] flex items-center justify-center">#4</span>
+<div>
+<span class="font-bold text-on-surface block text-body-md">West Tech Plaza Surface Lot</span>
+<span class="text-label-sm text-on-surface-variant font-mono-data">PK-108 • Surface Lot</span>
+</div>
+</div>
+</td>
+<td class="py-3 px-4">
+<div class="flex items-center gap-1.5">
+<span class="text-headline-sm font-bold text-error">58.4</span>
+<span class="text-label-sm text-on-surface-variant">/ 100</span>
+</div>
+</td>
+<td class="py-3 px-4">
+<span class="font-semibold text-error">12</span> / 180
+                <span class="text-[11px] text-error block font-normal">(93.3% occ)</span>
+</td>
+<td class="py-3 px-4">
+<div class="flex flex-col">
+<span class="font-bold text-error">2 bays</span>
+<span class="text-[10px] text-error font-sans font-semibold">Critical Congestion</span>
+</div>
+</td>
+<td class="py-3 px-4">
+<span class="font-semibold text-on-surface">180m</span>
+<span class="text-[11px] text-on-surface-variant block font-sans">2 min walk</span>
+</td>
+<td class="py-3 px-4 font-bold text-error">$4.00/hr</td>
+<td class="py-3 px-4 font-sans">
+<span class="px-2 py-0.5 rounded bg-surface-container-low text-on-surface-variant text-label-sm">None</span>
+</td>
+<td class="py-3 px-4 font-sans text-error text-label-sm max-w-xs font-medium">
+                Severe bay depletion; arrival risks total saturation &amp; rejection.
+              </td>
+<td class="py-3 px-4 text-right">
+<button class="px-3 py-1 rounded border border-outline-variant font-sans font-medium text-label-sm text-on-surface-variant opacity-60 cursor-not-allowed">Avoid</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- 6. ALGORITHMIC TRANSPARENCY & MODEL GOVERNANCE CARD -->
+<section class="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-sm space-y-4">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-outline-variant/60 pb-3">
+<div class="flex items-center gap-2">
+<div class="w-7 h-7 rounded bg-surface-container flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[18px]" data-icon="policy">policy</span>
+</div>
+<div>
+<h2 class="text-headline-sm font-headline-sm text-on-surface font-bold">Algorithmic Transparency &amp; Model Governance</h2>
+<span class="text-label-sm font-label-sm text-on-surface-variant">Deterministic Multi-Attribute Utility Theory (MAUT) &amp; Min-Max Standardizations</span>
+</div>
+</div>
+<div class="px-3 py-1 rounded-full bg-purple-50 border border-purple-200 text-purple-900 text-mono-timestamp text-[11px] flex items-center gap-2">
+<span class="material-symbols-outlined text-[14px]" data-icon="science">science</span>
+<span class="font-semibold">SIMULATED MOBILITY DATASET — ACADEMIC PROTOTYPE FOR CIVIC DECISION SUPPORT</span>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+<!-- Mathematical Formula Box -->
+<div class="lg:col-span-7 bg-primary-container text-inverse-on-surface rounded-xl p-4 font-mono-data text-body-sm shadow-inner space-y-2">
+<div class="flex items-center justify-between text-mono-timestamp text-primary-fixed-dim border-b border-outline/30 pb-2">
+<span>CORE SUITABILITY FORMULA:</span>
+<span>EQUATION SPEC 4.1</span>
+</div>
+<p class="text-secondary-fixed text-headline-sm font-bold tracking-wide">
+            S = w₁·Norm(Avail) + w₂·Norm(Pred) + w₃·(1 - Norm(Dist)) + w₄·(1 - Norm(Cost)) + TransitBonus
+          </p>
+<p class="text-[11px] text-on-primary-container leading-relaxed">
+            Where <code class="text-tertiary-fixed">Norm(X) = (X - X_min) / (X_max - X_min)</code> across active neighborhood cluster, scaled to a 0–100 integer bounds. Distance and Tariff indices are inverted such that lower distance and lower fees produce higher utility contribution.
+          </p>
+</div>
+<!-- Audit & Compliance Metas -->
+<div class="lg:col-span-5 grid grid-cols-2 gap-3 text-body-sm font-body-sm">
+<div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant/60">
+<span class="text-label-sm font-label-sm text-on-surface-variant block">Predictive Horizon Interval</span>
+<span class="font-mono-data font-semibold text-on-surface">+54 mins (Peak Evening)</span>
+<span class="text-[10px] text-emerald-700 font-mono-timestamp block mt-0.5">Confidence Score: 98.4%</span>
+</div>
+<div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant/60">
+<span class="text-label-sm font-label-sm text-on-surface-variant block">Walking Velocity Model</span>
+<span class="font-mono-data font-semibold text-on-surface">1.4 m/s (GIS Pedestrian Isochrone)</span>
+<span class="text-[10px] text-on-surface-variant font-mono-timestamp block mt-0.5">Sidewalk Grid Topology</span>
+</div>
+<div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant/60">
+<span class="text-label-sm font-label-sm text-on-surface-variant block">Transit Headway Cutoff</span>
+<span class="font-mono-data font-semibold text-on-surface">≤ 6 min headway</span>
+<span class="text-[10px] text-secondary font-mono-timestamp block mt-0.5">+5.0 Pts Eligibility</span>
+</div>
+<div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant/60">
+<span class="text-label-sm font-label-sm text-on-surface-variant block">Sensor Data Freshness</span>
+<span class="font-mono-data font-semibold text-on-surface">12s Polling Rate</span>
+<span class="text-[10px] text-emerald-700 font-mono-timestamp block mt-0.5">MQTT Broker Connected</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Inline Interactive Helpers (Presets switching visual states) -->
+<script>
+    // Lightweight vanilla JS interactions for preset filter feedback
+    document.querySelectorAll('section:nth-of-type(2) button').forEach(button => {
+      button.addEventListener('click', function(e) {
+        if (this.innerText.includes('Reset') || this.innerText.includes('Customize')) return;
+        
+        // Remove active styling from all preset buttons
+        const presetContainer = this.closest('div');
+        presetContainer.querySelectorAll('button').forEach(btn => {
+          btn.className = 'px-3 py-1 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface text-label-md font-label-md transition-colors border border-outline-variant/40';
+        });
+
+        // Set active styling on clicked
+        this.className = 'px-3 py-1 rounded-full bg-primary-container text-on-primary text-label-md font-label-md font-semibold flex items-center gap-1.5 shadow-sm';
+      });
+    });
+  </script>
+</body></html>

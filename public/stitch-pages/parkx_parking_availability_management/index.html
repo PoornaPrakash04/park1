@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ParkX Transit — Parking Facility Availability &amp; Inventory</title>
+<!-- Google Fonts: Inter & JetBrains Mono -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config Verbatim -->
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "tertiary": "#000000",
+            "secondary-fixed": "#c9e6ff",
+            "primary-fixed-dim": "#bec6e0",
+            "tertiary-fixed": "#6ffbbe",
+            "tertiary-container": "#002113",
+            "outline-variant": "#c6c6cd",
+            "on-secondary-fixed-variant": "#004c6e",
+            "secondary": "#006591",
+            "on-background": "#0b1c30",
+            "on-surface-variant": "#45464d",
+            "surface-container-low": "#eff4ff",
+            "background": "#f8f9ff",
+            "surface-variant": "#d3e4fe",
+            "on-tertiary": "#ffffff",
+            "on-primary": "#ffffff",
+            "surface-tint": "#565e74",
+            "on-tertiary-fixed": "#002113",
+            "inverse-on-surface": "#eaf1ff",
+            "primary": "#000000",
+            "on-secondary-container": "#004666",
+            "error": "#ba1a1a",
+            "on-surface": "#0b1c30",
+            "on-tertiary-container": "#009668",
+            "on-primary-fixed": "#131b2e",
+            "surface": "#f8f9ff",
+            "on-secondary-fixed": "#001e2f",
+            "on-primary-fixed-variant": "#3f465c",
+            "secondary-container": "#39b8fd",
+            "secondary-fixed-dim": "#89ceff",
+            "inverse-primary": "#bec6e0",
+            "on-tertiary-fixed-variant": "#005236",
+            "surface-container": "#e5eeff",
+            "tertiary-fixed-dim": "#4edea3",
+            "error-container": "#ffdad6",
+            "primary-container": "#131b2e",
+            "surface-container-high": "#dce9ff",
+            "on-error-container": "#93000a",
+            "on-secondary": "#ffffff",
+            "outline": "#76777d",
+            "surface-dim": "#cbdbf5",
+            "primary-fixed": "#dae2fd",
+            "inverse-surface": "#213145",
+            "on-error": "#ffffff",
+            "on-primary-container": "#7c839b",
+            "surface-bright": "#f8f9ff",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-highest": "#d3e4fe"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "space-md": "0.75rem",
+            "gutter-compact": "0.5rem",
+            "gutter": "1rem",
+            "space-sm": "0.5rem",
+            "space-xs": "0.25rem",
+            "space-xl": "1.75rem",
+            "space-lg": "1.25rem",
+            "margin": "1.5rem",
+            "margin-mobile": "0.75rem"
+          },
+          "fontFamily": {
+            "body-lg": ["Inter"],
+            "display": ["Inter"],
+            "mono-timestamp": ["JetBrains Mono"],
+            "body-sm": ["Inter"],
+            "label-sm": ["Inter"],
+            "mono-metric": ["JetBrains Mono"],
+            "headline-md": ["Inter"],
+            "label-md": ["Inter"],
+            "mono-data": ["JetBrains Mono"],
+            "headline-lg": ["Inter"],
+            "headline-lg-mobile": ["Inter"],
+            "headline-sm": ["Inter"],
+            "body-md": ["Inter"]
+          },
+          "fontSize": {
+            "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.005em", "fontWeight": "400" }],
+            "display": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.025em", "fontWeight": "700" }],
+            "mono-timestamp": ["10px", { "lineHeight": "12px", "letterSpacing": "0.04em", "fontWeight": "400" }],
+            "body-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0em", "fontWeight": "400" }],
+            "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.025em", "fontWeight": "500" }],
+            "mono-metric": ["24px", { "lineHeight": "28px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "headline-md": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+            "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+            "mono-data": ["12px", { "lineHeight": "16px", "letterSpacing": "0em", "fontWeight": "500" }],
+            "headline-lg": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "headline-lg-mobile": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+            "headline-sm": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    @keyframes pulseLive {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.6); opacity: 0.3; }
+    }
+    .pulse-ring {
+      animation: pulseLive 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface font-body-md antialiased min-h-screen overflow-x-hidden selection:bg-secondary-fixed selection:text-on-secondary-fixed">
+<!-- ======================================================== -->
+<!-- 1. PERSISTENT SIDEBAR COMPONENT (Source: Shared Components JSON) -->
+<!-- ======================================================== -->
+<aside class="fixed top-0 left-0 h-screen w-60 z-40 bg-surface-container-lowest dark:bg-primary-container border-r border-outline-variant dark:border-outline">
+<div class="flex flex-col justify-between h-full p-4">
+<!-- Top Section: Brand & Nav Links -->
+<div class="space-y-4">
+<!-- Brand & Header -->
+<div class="flex items-center gap-3 px-2 py-1">
+<div class="w-9 h-9 rounded-lg bg-primary-container dark:bg-surface-tint flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined text-[20px]" data-icon="local_parking">local_parking</span>
+</div>
+<div>
+<div class="text-headline-md font-headline-md tracking-tight font-bold text-on-surface dark:text-inverse-on-surface">ParkX Transit</div>
+<div class="text-mono-timestamp font-mono-timestamp text-on-surface-variant dark:text-outline-variant">GIS Operations Platform</div>
+</div>
+</div>
+<!-- Simulation Pill CTA -->
+<div class="px-2">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container-high border border-outline-variant text-label-sm font-label-sm text-secondary">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+            Simulation Mode
+          </div>
+</div>
+<!-- Navigation Tabs: Exact labels from JSON. "Parking Availability" is ACTIVE -->
+<nav class="space-y-1">
+<!-- Overview -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant dark:text-outline-variant hover:text-on-surface dark:hover:text-inverse-on-surface hover:bg-surface-container-low dark:hover:bg-surface-variant/30 transition-colors duration-150 active:scale-[0.98] transition-transform duration-100 ease-out" href="#">
+<span class="material-symbols-outlined text-[18px]" data-icon="dashboard">dashboard</span>
+<span class="text-label-md font-label-md">Overview</span>
+</a>
+<!-- Explore Map -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant dark:text-outline-variant hover:text-on-surface dark:hover:text-inverse-on-surface hover:bg-surface-container-low dark:hover:bg-surface-variant/30 transition-colors duration-150 active:scale-[0.98] transition-transform duration-100 ease-out" href="#">
+<span class="material-symbols-outlined text-[18px]" data-icon="map">map</span>
+<span class="text-label-md font-label-md">Explore Map</span>
+</a>
+<!-- Parking Availability (ACTIVE TAB) -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-surface-container-high dark:bg-surface-tint/20 text-on-surface dark:text-inverse-on-surface font-semibold hover:bg-surface-container-low dark:hover:bg-surface-variant/30 transition-colors duration-150 active:scale-[0.98] transition-transform duration-100 ease-out" href="#">
+<span class="material-symbols-outlined text-[18px] text-secondary" data-icon="local_parking" data-weight="fill" style="font-variation-settings: 'FILL' 1;">local_parking</span>
+<span class="text-label-md font-label-md">Parking Availability</span>
+</a>
+<!-- Availability Prediction -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant dark:text-outline-variant hover:text-on-surface dark:hover:text-inverse-on-surface hover:bg-surface-container-low dark:hover:bg-surface-variant/30 transition-colors duration-150 active:scale-[0.98] transition-transform duration-100 ease-out" href="#">
+<span class="material-symbols-outlined text-[18px]" data-icon="timeline">timeline</span>
+<span class="text-label-md font-label-md">Availability Prediction</span>
+</a>
+<!-- Parking Recommendations -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant dark:text-outline-variant hover:text-on-surface dark:hover:text-inverse-on-surface hover:bg-surface-container-low dark:hover:bg-surface-variant/30 transition-colors duration-150 active:scale-[0.98] transition-transform duration-100 ease-out" href="#">
+<span class="material-symbols-outlined text-[18px]" data-icon="recommend">recommend</span>
+<span class="text-label-md font-label-md">Parking Recommendations</span>
+</a>
+<!-- Public Transit -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant dark:text-outline-variant hover:text-on-surface dark:hover:text-inverse-on-surface hover:bg-surface-container-low dark:hover:bg-surface-variant/30 transition-colors duration-150 active:scale-[0.98] transition-transform duration-100 ease-out" href="#">
+<span class="material-symbols-outlined text-[18px]" data-icon="directions_transit">directions_transit</span>
+<span class="text-label-md font-label-md">Public Transit</span>
+</a>
+<!-- Analytics -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant dark:text-outline-variant hover:text-on-surface dark:hover:text-inverse-on-surface hover:bg-surface-container-low dark:hover:bg-surface-variant/30 transition-colors duration-150 active:scale-[0.98] transition-transform duration-100 ease-out" href="#">
+<span class="material-symbols-outlined text-[18px]" data-icon="analytics">analytics</span>
+<span class="text-label-md font-label-md">Analytics</span>
+</a>
+<!-- Administration -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant dark:text-outline-variant hover:text-on-surface dark:hover:text-inverse-on-surface hover:bg-surface-container-low dark:hover:bg-surface-variant/30 transition-colors duration-150 active:scale-[0.98] transition-transform duration-100 ease-out" href="#">
+<span class="material-symbols-outlined text-[18px]" data-icon="admin_panel_settings">admin_panel_settings</span>
+<span class="text-label-md font-label-md">Administration</span>
+</a>
+</nav>
+</div>
+<!-- Footer Tabs & System Meta -->
+<div class="border-t border-outline-variant dark:border-outline pt-3 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant dark:text-outline-variant hover:text-on-surface dark:hover:text-inverse-on-surface hover:bg-surface-container-low dark:hover:bg-surface-variant/30 transition-colors duration-150" href="#">
+<span class="material-symbols-outlined text-[18px]" data-icon="sensors">sensors</span>
+<span class="text-label-md font-label-md">System Health</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant dark:text-outline-variant hover:text-on-surface dark:hover:text-inverse-on-surface hover:bg-surface-container-low dark:hover:bg-surface-variant/30 transition-colors duration-150" href="#">
+<span class="material-symbols-outlined text-[18px]" data-icon="tune">tune</span>
+<span class="text-label-md font-label-md">Settings</span>
+</a>
+<div class="px-3 pt-2 text-mono-timestamp font-mono-timestamp text-outline">
+          v2.4.19-sim • GIS Core
+        </div>
+</div>
+</div>
+</aside>
+<!-- ======================================================== -->
+<!-- 2. TOP OPERATIONAL APP BAR (Source: Shared Components JSON) -->
+<!-- ======================================================== -->
+<header class="fixed top-0 right-0 left-60 h-14 z-30 bg-surface-container-lowest/95 dark:bg-primary-container/95 backdrop-blur-md border-b border-outline-variant dark:border-outline shadow-sm dark:shadow-none">
+<div class="flex items-center justify-between h-14 px-6 w-full">
+<!-- Left side: Universal Search & Route Breadcrumbs -->
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2 text-label-md font-label-md text-on-surface-variant">
+<span class="text-outline">GIS Operations</span>
+<span class="text-outline">/</span>
+<span class="text-on-surface font-semibold">Parking Availability</span>
+</div>
+<!-- Geo-Search Input with Keyboard Shortcut -->
+<div class="relative w-80">
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-[18px] text-outline" data-icon="search">search</span>
+<input class="w-full h-9 pl-9 pr-12 rounded-lg bg-surface-container-lowest border border-outline-variant text-body-sm font-body-sm text-on-surface placeholder:text-outline focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary transition-all" placeholder="Search facilities, bays, coords (e.g. PK-101)..." type="text"/>
+<kbd class="absolute right-2.5 top-2 px-1.5 py-0.5 rounded border border-outline-variant bg-surface-container text-mono-timestamp font-mono-timestamp text-on-surface-variant">⌘K</kbd>
+</div>
+</div>
+<!-- Right side: Actions, Trust Badge & Profile -->
+<div class="flex items-center gap-4">
+<!-- Data Status Trust Badge Pill -->
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-container-high border border-outline-variant">
+<span class="relative flex h-2 w-2">
+<span class="pulse-ring absolute inline-flex h-full w-full rounded-full bg-tertiary-fixed-dim opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-on-tertiary-container"></span>
+</span>
+<span class="text-mono-timestamp font-mono-timestamp text-on-surface font-medium">SIMULATED DEMO DATA</span>
+<span class="text-outline text-[10px]">•</span>
+<span class="text-mono-timestamp font-mono-timestamp text-on-surface-variant">14:35:12 UTC</span>
+</div>
+<!-- Trailing Actions from JSON -->
+<button class="px-3 py-1.5 rounded-lg border border-outline-variant hover:bg-surface-container-low text-label-md font-label-md text-on-surface flex items-center gap-1.5 transition-colors">
+<span class="material-symbols-outlined text-[16px]" data-icon="sync">sync</span>
+<span>Sync Telemetry</span>
+</button>
+<button class="px-3 py-1.5 rounded-lg bg-primary-container text-on-primary text-label-md font-label-md flex items-center gap-1.5 hover:bg-on-primary-fixed-variant transition-colors">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary-fixed animate-ping"></span>
+<span>Simulation Live</span>
+</button>
+<!-- Trailing Icon Actions -->
+<div class="flex items-center gap-1 border-l border-outline-variant pl-3">
+<button class="p-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" title="Notifications">
+<span class="material-symbols-outlined text-[20px]" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" title="Help &amp; Specs">
+<span class="material-symbols-outlined text-[20px]" data-icon="help">help</span>
+</button>
+<!-- Municipal Operator Profile -->
+<div class="flex items-center gap-2 ml-1 pl-2">
+<div class="w-8 h-8 rounded-full bg-surface-container-high border border-outline-variant flex items-center justify-center text-on-surface font-semibold text-label-sm">
+              OP
+            </div>
+</div>
+</div>
+</div>
+</div>
+</header>
+<!-- ======================================================== -->
+<!-- 3. MAIN WORKBENCH CONTENT CANVAS -->
+<!-- ======================================================== -->
+<main class="ml-60 pt-14 min-h-screen p-6 space-y-6">
+<!-- Page Header & Global Action Bar -->
+<div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-outline-variant pb-5">
+<div>
+<div class="flex items-center gap-3">
+<h1 class="text-headline-lg font-headline-lg text-on-surface tracking-tight">Parking Facility Availability &amp; Inventory</h1>
+<span class="px-2.5 py-0.5 rounded-full text-label-sm font-label-sm bg-surface-container-high text-on-surface border border-outline-variant">
+            Live Telemetry Node
+          </span>
+</div>
+<p class="text-body-md font-body-md text-on-surface-variant mt-1">
+          Real-time telemetry, sensor health, and manual override management for municipal parking assets.
+        </p>
+</div>
+<!-- Action Controls -->
+<div class="flex items-center gap-3 flex-wrap">
+<div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface-container border border-outline-variant text-label-sm font-label-sm text-on-surface">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span>Operator Mode: Enabled <strong class="font-semibold text-secondary">• Edit Privileges Active</strong></span>
+</div>
+<button class="px-3.5 py-1.5 rounded-lg border border-outline-variant bg-surface-container-lowest text-label-md font-label-md text-on-surface hover:bg-surface-container-low flex items-center gap-2 transition-colors">
+<span class="material-symbols-outlined text-[18px]" data-icon="upload_file">upload_file</span>
+<span>Import Telemetry CSV</span>
+</button>
+<button class="px-3.5 py-1.5 rounded-lg bg-primary-container text-on-primary text-label-md font-label-md hover:bg-on-primary-fixed-variant flex items-center gap-2 transition-colors">
+<span class="material-symbols-outlined text-[18px]" data-icon="refresh">refresh</span>
+<span>Batch Refresh Sensors</span>
+</button>
+</div>
+</div>
+<!-- ======================================================== -->
+<!-- 4. QUICK SUMMARY METRICS BAR (4 KPI Bento Cards) -->
+<!-- ======================================================== -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+<!-- KPI Card 1: Monitored Facilities -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span class="text-label-sm font-label-sm tracking-wide uppercase font-semibold">Monitored Facilities</span>
+<span class="material-symbols-outlined text-[20px] text-secondary" data-icon="domain">domain</span>
+</div>
+<div class="mt-3">
+<div class="text-mono-metric font-mono-metric text-on-surface">24 <span class="text-body-sm font-body-sm font-normal text-on-surface-variant">active decks/lots</span></div>
+<div class="flex items-center justify-between mt-2 pt-2 border-t border-outline-variant text-mono-data font-mono-data text-on-surface-variant">
+<span>18 IoT • 6 Manual/Loop</span>
+<span class="text-on-tertiary-container font-semibold">99.1% uptime</span>
+</div>
+</div>
+</div>
+<!-- KPI Card 2: Overall Capacity Utilization -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span class="text-label-sm font-label-sm tracking-wide uppercase font-semibold">Capacity Utilization</span>
+<span class="material-symbols-outlined text-[20px] text-secondary" data-icon="pie_chart">pie_chart</span>
+</div>
+<div class="mt-3">
+<div class="flex items-baseline justify-between">
+<div class="text-mono-metric font-mono-metric text-on-surface">68.2%</div>
+<div class="text-mono-data font-mono-data text-on-surface-variant">2,358 / 3,450 bays</div>
+</div>
+<!-- Linear progress rail -->
+<div class="w-full bg-surface-container rounded-full h-2 mt-2 overflow-hidden">
+<div class="bg-secondary h-2 rounded-full" style="width: 68.2%"></div>
+</div>
+<div class="flex justify-between mt-2 text-mono-timestamp font-mono-timestamp text-outline">
+<span>1,092 free parking spaces</span>
+<span>+3.4% vs 1h ago</span>
+</div>
+</div>
+</div>
+<!-- KPI Card 3: Critical/Full Facilities -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span class="text-label-sm font-label-sm tracking-wide uppercase font-semibold">Critical / Near Capacity</span>
+<span class="material-symbols-outlined text-[20px] text-error" data-icon="warning">warning</span>
+</div>
+<div class="mt-3">
+<div class="flex items-baseline gap-2">
+<span class="text-mono-metric font-mono-metric text-error">3</span>
+<span class="text-body-sm font-body-sm text-on-surface-variant">facilities &gt; 90% full</span>
+</div>
+<div class="flex items-center gap-1.5 mt-2 pt-2 border-t border-outline-variant">
+<span class="px-2 py-0.5 rounded text-label-sm font-label-sm bg-error-container text-on-error-container font-medium">PK-108</span>
+<span class="px-2 py-0.5 rounded text-label-sm font-label-sm bg-error-container text-on-error-container font-medium">PK-115</span>
+<span class="px-2 py-0.5 rounded text-label-sm font-label-sm bg-surface-container text-on-surface-variant font-medium">PK-122</span>
+<span class="text-label-sm font-label-sm text-outline ml-auto">Surge alert</span>
+</div>
+</div>
+</div>
+<!-- KPI Card 4: Ingestion Health -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span class="text-label-sm font-label-sm tracking-wide uppercase font-semibold">Ingestion Telemetry</span>
+<span class="material-symbols-outlined text-[20px] text-on-tertiary-container" data-icon="sensors">sensors</span>
+</div>
+<div class="mt-3">
+<div class="flex items-baseline justify-between">
+<div class="text-mono-metric font-mono-metric text-on-surface">22 Live</div>
+<span class="text-mono-data font-mono-data text-outline">2 Periodic</span>
+</div>
+<div class="flex items-center justify-between mt-2 pt-2 border-t border-outline-variant text-mono-data font-mono-data">
+<span class="text-on-surface-variant">Avg latency: <strong class="text-on-surface">1.4s</strong></span>
+<span class="inline-flex items-center gap-1 text-on-tertiary-container font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-on-tertiary-container"></span> All Nominal
+            </span>
+</div>
+</div>
+</div>
+</div>
+<!-- ======================================================== -->
+<!-- 5. FILTER & CONTROL TOOLBAR -->
+<!-- ======================================================== -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-3 shadow-sm flex flex-wrap items-center justify-between gap-3">
+<!-- Left Filters Group -->
+<div class="flex flex-wrap items-center gap-2.5">
+<!-- Search Filter Input -->
+<div class="relative w-64">
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-[16px] text-outline" data-icon="search">search</span>
+<input class="w-full h-8 pl-8 pr-3 rounded bg-surface-container-low border border-outline-variant text-body-sm font-body-sm text-on-surface placeholder:text-outline focus:outline-none focus:border-secondary" placeholder="Filter by name or PK-ID..." type="text"/>
+</div>
+<!-- Dropdown: Availability Status -->
+<div class="relative">
+<select class="h-8 pl-2.5 pr-8 rounded bg-surface-container-low border border-outline-variant text-body-sm font-body-sm text-on-surface focus:outline-none focus:border-secondary appearance-none cursor-pointer">
+<option>Status: All Availabilities</option>
+<option>High (&gt; 30% Free)</option>
+<option>Moderate (10 - 30%)</option>
+<option>Critical (&lt; 10% Free)</option>
+<option>Closed / Maintenance</option>
+</select>
+<span class="material-symbols-outlined absolute right-2 top-2 text-[16px] text-outline pointer-events-none" data-icon="expand_more">expand_more</span>
+</div>
+<!-- Dropdown: Facility Type -->
+<div class="relative">
+<select class="h-8 pl-2.5 pr-8 rounded bg-surface-container-low border border-outline-variant text-body-sm font-body-sm text-on-surface focus:outline-none focus:border-secondary appearance-none cursor-pointer">
+<option>Type: All Structural Types</option>
+<option>Multi-level Deck</option>
+<option>Surface Lot</option>
+<option>Subterranean Garage</option>
+</select>
+<span class="material-symbols-outlined absolute right-2 top-2 text-[16px] text-outline pointer-events-none" data-icon="expand_more">expand_more</span>
+</div>
+<!-- Dropdown: Tariff Range -->
+<div class="relative">
+<select class="h-8 pl-2.5 pr-8 rounded bg-surface-container-low border border-outline-variant text-body-sm font-body-sm text-on-surface focus:outline-none focus:border-secondary appearance-none cursor-pointer">
+<option>Tariff: All ($1.50 - $6.00/hr)</option>
+<option>Economy (&lt; $2.50/hr)</option>
+<option>Standard ($2.50 - $4.00/hr)</option>
+<option>Premium (&gt; $4.00/hr)</option>
+</select>
+<span class="material-symbols-outlined absolute right-2 top-2 text-[16px] text-outline pointer-events-none" data-icon="expand_more">expand_more</span>
+</div>
+<!-- Dropdown: Data Source -->
+<div class="relative">
+<select class="h-8 pl-2.5 pr-8 rounded bg-surface-container-low border border-outline-variant text-body-sm font-body-sm text-on-surface focus:outline-none focus:border-secondary appearance-none cursor-pointer">
+<option>Source: All Telemetry Feeds</option>
+<option>Ultrasonic Bay Sensors</option>
+<option>IoT Ground Loop</option>
+<option>Gate Ingress Counter</option>
+<option>Manual Operator Estimate</option>
+</select>
+<span class="material-symbols-outlined absolute right-2 top-2 text-[16px] text-outline pointer-events-none" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+<!-- Right View Switcher & Counter -->
+<div class="flex items-center gap-3">
+<span class="text-mono-data font-mono-data text-outline">Showing 6 of 24 Facilities</span>
+<div class="flex rounded-lg border border-outline-variant p-0.5 bg-surface-container">
+<button class="px-2.5 py-1 rounded bg-surface-container-lowest text-on-surface text-label-sm font-label-sm shadow-sm flex items-center gap-1 font-semibold">
+<span class="material-symbols-outlined text-[16px]" data-icon="table_rows">table_rows</span>
+<span>Tabular Grid</span>
+</button>
+<button class="px-2.5 py-1 rounded text-on-surface-variant hover:text-on-surface text-label-sm font-label-sm flex items-center gap-1 transition-colors">
+<span class="material-symbols-outlined text-[16px]" data-icon="splitscreen">splitscreen</span>
+<span>Split GIS View</span>
+</button>
+</div>
+</div>
+</div>
+<!-- ======================================================== -->
+<!-- 6. PRIMARY CONTENT AREA: MASTER-DETAIL SPLIT (68% / 32%) -->
+<!-- ======================================================== -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+<!-- LEFT COLUMN: MASTER INVENTORY TABLE (Col span 8 = ~67%) -->
+<div class="lg:col-span-8 bg-surface-container-lowest border border-outline-variant rounded-xl shadow-sm overflow-hidden flex flex-col justify-between">
+<!-- Table Scroll Container -->
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<!-- Table Header -->
+<thead>
+<tr class="bg-surface-container border-b border-outline-variant text-on-surface text-label-sm font-label-sm">
+<th class="py-3 px-4">Facility &amp; ID</th>
+<th class="py-3 px-3">Operating Status</th>
+<th class="py-3 px-3 text-right">Capacity</th>
+<th class="py-3 px-4">Occupied vs Free</th>
+<th class="py-3 px-3 text-right">Occupancy %</th>
+<th class="py-3 px-3 text-right">Tariff</th>
+<th class="py-3 px-3">Data Ingestion</th>
+<th class="py-3 px-4 text-center">Quick Action</th>
+</tr>
+</thead>
+<!-- Table Body -->
+<tbody class="divide-y divide-outline-variant text-body-sm font-body-sm">
+<!-- ROW 1: Civic Center North Deck (SELECTED / HIGHLIGHTED) -->
+<tr class="bg-secondary-fixed/20 hover:bg-secondary-fixed/30 transition-colors border-l-4 border-l-secondary cursor-pointer">
+<td class="py-3.5 px-4">
+<div class="font-semibold text-on-surface text-label-md font-label-md">Civic Center North Deck</div>
+<div class="text-mono-timestamp font-mono-timestamp text-secondary font-medium">PK-101 • Multi-level Deck</div>
+<div class="text-body-sm font-body-sm text-outline text-[11px]">140 Grand Civic Ave</div>
+</td>
+<td class="py-3.5 px-3">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-label-sm font-label-sm bg-surface-container text-on-surface border border-outline-variant">
+<span class="w-1.5 h-1.5 rounded-full bg-on-tertiary-container"></span>
+                    Open 24/7
+                  </span>
+</td>
+<td class="py-3.5 px-3 text-right font-mono-data font-mono-data text-on-surface">450</td>
+<td class="py-3.5 px-4">
+<div class="flex items-center justify-between text-mono-data font-mono-data text-[11px] mb-1">
+<span class="text-on-surface font-semibold">308 occ</span>
+<span class="text-on-tertiary-container font-semibold">142 free</span>
+</div>
+<div class="w-full bg-surface-container rounded-full h-1.5 overflow-hidden">
+<div class="bg-secondary h-1.5 rounded-full" style="width: 68.4%"></div>
+</div>
+</td>
+<td class="py-3.5 px-3 text-right font-mono-data font-mono-data font-semibold text-secondary">
+                  68.4%
+                </td>
+<td class="py-3.5 px-3 text-right font-mono-data font-mono-data text-on-surface">
+                  $3.50/hr
+                </td>
+<td class="py-3.5 px-3">
+<div class="flex items-center gap-1.5 text-label-sm font-label-sm text-on-surface">
+<span class="relative flex h-1.5 w-1.5">
+<span class="pulse-ring absolute inline-flex h-full w-full rounded-full bg-tertiary-fixed-dim opacity-75"></span>
+<span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-on-tertiary-container"></span>
+</span>
+<span>Ultrasonic Bays</span>
+</div>
+<div class="text-mono-timestamp font-mono-timestamp text-outline">14s ago • MQTT</div>
+</td>
+<td class="py-3.5 px-4 text-center">
+<div class="flex items-center justify-center gap-1">
+<button class="p-1 rounded hover:bg-surface-container text-secondary" title="Direct Override">
+<span class="material-symbols-outlined text-[18px]" data-icon="tune">tune</span>
+</button>
+<button class="p-1 rounded hover:bg-surface-container text-on-surface-variant" title="View Detail">
+<span class="material-symbols-outlined text-[18px]" data-icon="visibility">visibility</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- ROW 2: Metro Hub Underground -->
+<tr class="hover:bg-surface-container-low transition-colors cursor-pointer">
+<td class="py-3.5 px-4">
+<div class="font-semibold text-on-surface text-label-md font-label-md">Metro Hub Underground</div>
+<div class="text-mono-timestamp font-mono-timestamp text-outline font-medium">PK-104 • Subterranean</div>
+<div class="text-body-sm font-body-sm text-outline text-[11px]">88 Central Station Blvd</div>
+</td>
+<td class="py-3.5 px-3">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-label-sm font-label-sm bg-surface-container text-on-surface border border-outline-variant">
+<span class="w-1.5 h-1.5 rounded-full bg-on-tertiary-container"></span>
+                    Open 24/7
+                  </span>
+</td>
+<td class="py-3.5 px-3 text-right font-mono-data font-mono-data text-on-surface">320</td>
+<td class="py-3.5 px-4">
+<div class="flex items-center justify-between text-mono-data font-mono-data text-[11px] mb-1">
+<span class="text-on-surface font-semibold">232 occ</span>
+<span class="text-on-surface-variant">88 free</span>
+</div>
+<div class="w-full bg-surface-container rounded-full h-1.5 overflow-hidden">
+<div class="bg-secondary h-1.5 rounded-full" style="width: 72.5%"></div>
+</div>
+</td>
+<td class="py-3.5 px-3 text-right font-mono-data font-mono-data font-semibold text-on-surface">
+                  72.5%
+                </td>
+<td class="py-3.5 px-3 text-right font-mono-data font-mono-data text-on-surface">
+                  $2.50/hr
+                </td>
+<td class="py-3.5 px-3">
+<div class="flex items-center gap-1.5 text-label-sm font-label-sm text-on-surface">
+<span class="w-1.5 h-1.5 rounded-full bg-on-tertiary-container"></span>
+<span>Gate Counters</span>
+</div>
+<div class="text-mono-timestamp font-mono-timestamp text-outline">1m ago • BACnet</div>
+</td>
+<td class="py-3.5 px-4 text-center">
+<div class="flex items-center justify-center gap-1">
+<button class="p-1 rounded hover:bg-surface-container text-on-surface-variant hover:text-secondary" title="Direct Override">
+<span class="material-symbols-outlined text-[18px]" data-icon="tune">tune</span>
+</button>
+<button class="p-1 rounded hover:bg-surface-container text-on-surface-variant" title="View Detail">
+<span class="material-symbols-outlined text-[18px]" data-icon="visibility">visibility</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- ROW 3: West Tech Plaza Surface (CRITICAL RED) -->
+<tr class="hover:bg-surface-container-low transition-colors cursor-pointer bg-error-container/20">
+<td class="py-3.5 px-4">
+<div class="font-semibold text-on-surface text-label-md font-label-md">West Tech Plaza Surface</div>
+<div class="text-mono-timestamp font-mono-timestamp text-error font-medium">PK-108 • Surface Lot</div>
+<div class="text-body-sm font-body-sm text-outline text-[11px]">402 Silicon Way</div>
+</td>
+<td class="py-3.5 px-3">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-label-sm font-label-sm bg-error-container text-on-error-container border border-outline-variant font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span>
+                    Until 23:00
+                  </span>
+</td>
+<td class="py-3.5 px-3 text-right font-mono-data font-mono-data text-on-surface">180</td>
+<td class="py-3.5 px-4">
+<div class="flex items-center justify-between text-mono-data font-mono-data text-[11px] mb-1">
+<span class="text-error font-semibold">168 occ</span>
+<span class="text-error font-bold">12 free</span>
+</div>
+<div class="w-full bg-surface-container rounded-full h-1.5 overflow-hidden">
+<div class="bg-error h-1.5 rounded-full" style="width: 93.3%"></div>
+</div>
+</td>
+<td class="py-3.5 px-3 text-right font-mono-data font-mono-data font-semibold text-error">
+                  93.3%
+                </td>
+<td class="py-3.5 px-3 text-right font-mono-data font-mono-data text-on-surface">
+                  $4.00/hr
+                </td>
+<td class="py-3.5 px-3">
+<div class="flex items-center gap-1.5 text-label-sm font-label-sm text-on-surface">
+<span class="relative flex h-1.5 w-1.5">
+<span class="pulse-ring absolute inline-flex h-full w-full rounded-full bg-tertiary-fixed-dim opacity-75"></span>
+<span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-on-tertiary-container"></span>
+</span>
+<span>Loop Sensors</span>
+</div>
+<div class="text-mono-timestamp font-mono-timestamp text-outline">45s ago • LoRaWAN</div>
+</td>
+<td class="py-3.5 px-4 text-center">
+<div class="flex items-center justify-center gap-1">
+<button class="p-1 rounded hover:bg-surface-container text-on-surface-variant hover:text-secondary" title="Direct Override">
+<span class="material-symbols-outlined text-[18px]" data-icon="tune">tune</span>
+</button>
+<button class="p-1 rounded hover:bg-surface-container text-on-surface-variant" title="View Detail">
+<span class="material-symbols-outlined text-[18px]" data-icon="visibility">visibility</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- ROW 4: Riverfront Park & Ride (HIGH GREEN) -->
+<tr class="hover:bg-surface-container-low transition-colors cursor-pointer">
+<td class="py-3.5 px-4">
+<div class="font-semibold text-on-surface text-label-md font-label-md">Riverfront Park &amp; Ride</div>
+<div class="text-mono-timestamp font-mono-timestamp text-outline font-medium">PK-112 • Transit Hub Surface</div>
+<div class="text-body-sm font-body-sm text-outline text-[11px]">10 Ferry Terminal Rd</div>
+</td>
+<td class="py-3.5 px-3">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-label-sm font-label-sm bg-surface-container text-on-surface border border-outline-variant">
+<span class="w-1.5 h-1.5 rounded-full bg-on-tertiary-container"></span>
+                    Open 24/7
+                  </span>
+</td>
+<td class="py-3.5 px-3 text-right font-mono-data font-mono-data text-on-surface">600</td>
+<td class="py-3.5 px-4">
+<div class="flex items-center justify-between text-mono-data font-mono-data text-[11px] mb-1">
+<span class="text-on-surface font-semibold">210 occ</span>
+<span class="text-on-tertiary-container font-semibold">390 free</span>
+</div>
+<div class="w-full bg-surface-container rounded-full h-1.5 overflow-hidden">
+<div class="bg-on-tertiary-container h-1.5 rounded-full" style="width: 35.0%"></div>
+</div>
+</td>
+<td class="py-3.5 px-3 text-right font-mono-data font-mono-data font-semibold text-on-tertiary-container">
+                  35.0%
+                </td>
+<td class="py-3.5 px-3 text-right font-mono-data font-mono-data text-on-surface">
+                  $1.50/hr
+                </td>
+<td class="py-3.5 px-3">
+<div class="flex items-center gap-1.5 text-label-sm font-label-sm text-on-surface">
+<span class="w-1.5 h-1.5 rounded-full bg-on-tertiary-container"></span>
+<span>ANPR Camera</span>
+</div>
+<div class="text-mono-timestamp font-mono-timestamp text-outline">2m ago • RTSP/AI</div>
+</td>
+<td class="py-3.5 px-4 text-center">
+<div class="flex items-center justify-center gap-1">
+<button class="p-1 rounded hover:bg-surface-container text-on-surface-variant hover:text-secondary" title="Direct Override">
+<span class="material-symbols-outlined text-[18px]" data-icon="tune">tune</span>
+</button>
+<button class="p-1 rounded hover:bg-surface-container text-on-surface-variant" title="View Detail">
+<span class="material-symbols-outlined text-[18px]" data-icon="visibility">visibility</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- ROW 5: Plaza Point Garage (FULL RED) -->
+<tr class="hover:bg-surface-container-low transition-colors cursor-pointer bg-error-container/20">
+<td class="py-3.5 px-4">
+<div class="font-semibold text-on-surface text-label-md font-label-md">Plaza Point Garage</div>
+<div class="text-mono-timestamp font-mono-timestamp text-error font-medium">PK-115 • Multi-level Deck</div>
+<div class="text-body-sm font-body-sm text-outline text-[11px]">750 Market Promenade</div>
+</td>
+<td class="py-3.5 px-3">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-label-sm font-label-sm bg-error-container text-on-error-container border border-outline-variant font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span>
+                    Lot Full
+                  </span>
+</td>
+<td class="py-3.5 px-3 text-right font-mono-data font-mono-data text-on-surface">200</td>
+<td class="py-3.5 px-4">
+<div class="flex items-center justify-between text-mono-data font-mono-data text-[11px] mb-1">
+<span class="text-error font-semibold">196 occ</span>
+<span class="text-error font-bold">4 free</span>
+</div>
+<div class="w-full bg-surface-container rounded-full h-1.5 overflow-hidden">
+<div class="bg-error h-1.5 rounded-full" style="width: 98.0%"></div>
+</div>
+</td>
+<td class="py-3.5 px-3 text-right font-mono-data font-mono-data font-semibold text-error">
+                  98.0%
+                </td>
+<td class="py-3.5 px-3 text-right font-mono-data font-mono-data text-on-surface">
+                  $5.00/hr
+                </td>
+<td class="py-3.5 px-3">
+<div class="flex items-center gap-1.5 text-label-sm font-label-sm text-on-surface">
+<span class="relative flex h-1.5 w-1.5">
+<span class="pulse-ring absolute inline-flex h-full w-full rounded-full bg-tertiary-fixed-dim opacity-75"></span>
+<span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-on-tertiary-container"></span>
+</span>
+<span>Ultrasonic Bays</span>
+</div>
+<div class="text-mono-timestamp font-mono-timestamp text-outline">10s ago • MQTT</div>
+</td>
+<td class="py-3.5 px-4 text-center">
+<div class="flex items-center justify-center gap-1">
+<button class="p-1 rounded hover:bg-surface-container text-on-surface-variant hover:text-secondary" title="Direct Override">
+<span class="material-symbols-outlined text-[18px]" data-icon="tune">tune</span>
+</button>
+<button class="p-1 rounded hover:bg-surface-container text-on-surface-variant" title="View Detail">
+<span class="material-symbols-outlined text-[18px]" data-icon="visibility">visibility</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- ROW 6: Harbor East Lot B (CLOSED - GRAY) -->
+<tr class="hover:bg-surface-container-low transition-colors cursor-pointer bg-surface-container/50 opacity-80">
+<td class="py-3.5 px-4">
+<div class="font-semibold text-on-surface-variant text-label-md font-label-md">Harbor East Lot B</div>
+<div class="text-mono-timestamp font-mono-timestamp text-outline font-medium">PK-120 • Surface Lot</div>
+<div class="text-body-sm font-body-sm text-outline text-[11px]">2 Maritime Pier</div>
+</td>
+<td class="py-3.5 px-3">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-label-sm font-label-sm bg-surface-container-highest text-on-surface-variant border border-outline-variant font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-outline"></span>
+                    Closed / Repair
+                  </span>
+</td>
+<td class="py-3.5 px-3 text-right font-mono-data font-mono-data text-outline">150</td>
+<td class="py-3.5 px-4">
+<div class="text-label-sm font-label-sm text-outline italic">Closed for Resurfacing</div>
+<div class="w-full bg-surface-container-highest rounded-full h-1.5 mt-1 overflow-hidden">
+<div class="bg-outline h-1.5 rounded-full" style="width: 0%"></div>
+</div>
+</td>
+<td class="py-3.5 px-3 text-right font-mono-data font-mono-data font-medium text-outline">
+                  0.0%
+                </td>
+<td class="py-3.5 px-3 text-right font-mono-data font-mono-data text-outline">
+                  $2.00/hr
+                </td>
+<td class="py-3.5 px-3">
+<div class="flex items-center gap-1.5 text-label-sm font-label-sm text-on-surface-variant">
+<span class="w-1.5 h-1.5 rounded-full bg-outline"></span>
+<span>Operator Override</span>
+</div>
+<div class="text-mono-timestamp font-mono-timestamp text-outline">Offline • Maintenance</div>
+</td>
+<td class="py-3.5 px-4 text-center">
+<div class="flex items-center justify-center gap-1">
+<button class="p-1 rounded hover:bg-surface-container text-on-surface-variant hover:text-secondary" title="Direct Override">
+<span class="material-symbols-outlined text-[18px]" data-icon="tune">tune</span>
+</button>
+<button class="p-1 rounded hover:bg-surface-container text-on-surface-variant" title="View Detail">
+<span class="material-symbols-outlined text-[18px]" data-icon="visibility">visibility</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Pagination Footer -->
+<div class="p-3 border-t border-outline-variant flex items-center justify-between bg-surface-container-lowest text-label-sm font-label-sm text-on-surface-variant">
+<div class="flex items-center gap-2">
+<span>Rows per page:</span>
+<select class="h-7 px-2 bg-surface-container border border-outline-variant rounded text-on-surface text-label-sm font-label-sm focus:outline-none">
+<option>6</option>
+<option>12</option>
+<option>24</option>
+</select>
+<span class="ml-2 text-outline">1–6 of 24 records</span>
+</div>
+<div class="flex items-center gap-1">
+<button class="p-1 rounded border border-outline-variant text-outline hover:text-on-surface disabled:opacity-40" disabled="">
+<span class="material-symbols-outlined text-[16px]" data-icon="chevron_left">chevron_left</span>
+</button>
+<button class="px-2.5 py-1 rounded bg-secondary text-on-secondary font-medium">1</button>
+<button class="px-2.5 py-1 rounded hover:bg-surface-container text-on-surface">2</button>
+<button class="px-2.5 py-1 rounded hover:bg-surface-container text-on-surface">3</button>
+<button class="px-2.5 py-1 rounded hover:bg-surface-container text-on-surface">4</button>
+<button class="p-1 rounded border border-outline-variant text-on-surface hover:bg-surface-container">
+<span class="material-symbols-outlined text-[16px]" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- RIGHT COLUMN: SELECTED FACILITY DEEP DIVE & OPERATOR OVERRIDE PANEL (Col span 4 = ~33%) -->
+<div class="lg:col-span-4 space-y-4">
+<!-- Inspector Card -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl shadow-sm p-4 space-y-4">
+<!-- Inspector Header -->
+<div class="flex items-start justify-between border-b border-outline-variant pb-3">
+<div>
+<div class="inline-flex items-center gap-1.5 text-label-sm font-label-sm text-secondary font-semibold uppercase tracking-wider">
+<span class="material-symbols-outlined text-[16px]" data-icon="radar">radar</span>
+                Selected Facility Inspector
+              </div>
+<h2 class="text-headline-sm font-headline-sm text-on-surface mt-0.5">Civic Center North Deck</h2>
+<div class="text-mono-timestamp font-mono-timestamp text-outline">ID: PK-101 • 140 Grand Civic Ave</div>
+</div>
+<span class="px-2 py-0.5 rounded text-mono-timestamp font-mono-timestamp bg-surface-container-high text-secondary border border-outline-variant font-medium">
+              TIER 1 ASSET
+            </span>
+</div>
+<!-- Multi-Floor Deck Breakdown -->
+<div>
+<div class="flex items-center justify-between text-label-sm font-label-sm mb-2">
+<span class="font-semibold text-on-surface">Floor-by-Floor Inventory Breakdown</span>
+<span class="text-mono-data font-mono-data text-secondary">308 / 450 Occ</span>
+</div>
+<div class="space-y-2">
+<!-- Level 1 -->
+<div>
+<div class="flex justify-between text-mono-timestamp font-mono-timestamp mb-0.5">
+<span class="text-on-surface font-medium">Level 1 (Ground &amp; Transit Gate)</span>
+<span class="text-error font-semibold">92% full (110/120)</span>
+</div>
+<div class="w-full bg-surface-container rounded-full h-1.5 overflow-hidden">
+<div class="bg-error h-1.5 rounded-full" style="width: 92%"></div>
+</div>
+</div>
+<!-- Level 2 -->
+<div>
+<div class="flex justify-between text-mono-timestamp font-mono-timestamp mb-0.5">
+<span class="text-on-surface font-medium">Level 2 (Standard Clearance)</span>
+<span class="text-secondary font-semibold">74% full (89/120)</span>
+</div>
+<div class="w-full bg-surface-container rounded-full h-1.5 overflow-hidden">
+<div class="bg-secondary h-1.5 rounded-full" style="width: 74%"></div>
+</div>
+</div>
+<!-- Level 3 -->
+<div>
+<div class="flex justify-between text-mono-timestamp font-mono-timestamp mb-0.5">
+<span class="text-on-surface font-medium">Level 3 (EV Fast Charging Hub)</span>
+<span class="text-on-tertiary-container font-semibold">45% full (54/120 • 12 EV Free)</span>
+</div>
+<div class="w-full bg-surface-container rounded-full h-1.5 overflow-hidden">
+<div class="bg-on-tertiary-container h-1.5 rounded-full" style="width: 45%"></div>
+</div>
+</div>
+<!-- Level 4 Roof -->
+<div>
+<div class="flex justify-between text-mono-timestamp font-mono-timestamp mb-0.5">
+<span class="text-on-surface font-medium">Level 4 (Open Roof Deck)</span>
+<span class="text-on-tertiary-container font-semibold">22% full (20/90)</span>
+</div>
+<div class="w-full bg-surface-container rounded-full h-1.5 overflow-hidden">
+<div class="bg-on-tertiary-container h-1.5 rounded-full" style="width: 22%"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Mini Historical Occupancy Sparkline (Past 8h Trend) -->
+<div class="border-t border-outline-variant pt-3">
+<div class="flex items-center justify-between text-label-sm font-label-sm mb-1.5">
+<span class="font-semibold text-on-surface">Occupancy Dynamics (Past 8 Hours)</span>
+<span class="text-mono-timestamp font-mono-timestamp text-outline">Vs Baseline ±3%</span>
+</div>
+<!-- Stylized CSS SVG Area Sparkline -->
+<div class="h-20 w-full bg-surface-container-low rounded-lg p-2 border border-outline-variant relative flex flex-col justify-end">
+<svg class="w-full h-14 overflow-visible" preserveaspectratio="none" viewbox="0 0 200 60">
+<!-- Baseline dashed line -->
+<line stroke="#76777d" stroke-dasharray="2,2" stroke-width="0.8" x1="0" x2="200" y1="35" y2="35"></line>
+<!-- Area gradient -->
+<defs>
+<lineargradient id="sparklineGrad" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#006591" stop-opacity="0.35"></stop>
+<stop offset="100%" stop-color="#006591" stop-opacity="0.0"></stop>
+</lineargradient>
+</defs>
+<path d="M 0,48 Q 25,45 50,30 T 100,24 T 150,14 T 200,20 L 200,60 L 0,60 Z" fill="url(#sparklineGrad)"></path>
+<path d="M 0,48 Q 25,45 50,30 T 100,24 T 150,14 T 200,20" fill="none" stroke="#006591" stroke-linecap="round" stroke-width="2"></path>
+<!-- Current point -->
+<circle cx="200" cy="20" fill="#006591" r="3.5" stroke="#ffffff" stroke-width="1.5"></circle>
+</svg>
+<div class="flex justify-between text-mono-timestamp font-mono-timestamp text-outline mt-1 pt-1 border-t border-outline-variant">
+<span>06:30</span>
+<span>09:00 (Peak Ingress)</span>
+<span>12:30</span>
+<span class="text-secondary font-semibold">14:35 (68.4%)</span>
+</div>
+</div>
+</div>
+<!-- Device Gateway & Hardware Telemetry -->
+<div class="border-t border-outline-variant pt-3 grid grid-cols-2 gap-2 text-mono-timestamp font-mono-timestamp">
+<div class="bg-surface-container-low p-2 rounded border border-outline-variant">
+<span class="text-outline block">GATEWAY ID</span>
+<span class="text-on-surface font-semibold">GW-PK101-NORTH</span>
+</div>
+<div class="bg-surface-container-low p-2 rounded border border-outline-variant">
+<span class="text-outline block">PROTOCOL</span>
+<span class="text-on-surface font-semibold">MQTT / LoRaWAN v1.03</span>
+</div>
+<div class="bg-surface-container-low p-2 rounded border border-outline-variant">
+<span class="text-outline block">SENSOR MESH</span>
+<span class="text-on-surface font-semibold">450 / 450 Nodes Active</span>
+</div>
+<div class="bg-surface-container-low p-2 rounded border border-outline-variant">
+<span class="text-outline block">LAST TELEMETRY</span>
+<span class="text-on-surface font-semibold">14:35:12.441 UTC</span>
+</div>
+</div>
+</div>
+<!-- AUTHORIZED OPERATOR MANUAL OVERRIDE INTERFACE -->
+<div class="bg-surface-container-lowest border-2 border-secondary rounded-xl shadow-sm p-4 space-y-3.5 relative overflow-hidden">
+<!-- Top subtle accent bar -->
+<div class="absolute top-0 left-0 right-0 h-1 bg-secondary"></div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px] text-secondary" data-icon="lock_open">lock_open</span>
+<h3 class="text-label-md font-label-md font-bold text-on-surface">Authorized Operator Manual Override</h3>
+</div>
+<span class="px-2 py-0.5 rounded text-[10px] font-mono-timestamp bg-secondary-fixed text-on-secondary-fixed font-semibold">
+              ELEVATED PRIVILEGES
+            </span>
+</div>
+<p class="text-[11px] font-body-sm text-on-surface-variant leading-relaxed">
+            Directly adjust live bay availability counters or enforce facility status state changes. All override adjustments are cryptographically signed and logged into the municipal telemetry ledger.
+          </p>
+<!-- Form Controls -->
+<div class="space-y-3 pt-1">
+<!-- Quick Stepper: Adjust Free Bays (+ / -) -->
+<div>
+<label class="block text-label-sm font-label-sm text-on-surface mb-1">
+                Adjust Free Bays Offset (Current: <span class="font-bold text-secondary">142 free</span>)
+              </label>
+<div class="flex items-center gap-2">
+<button class="w-9 h-9 rounded bg-surface-container border border-outline-variant flex items-center justify-center text-on-surface hover:bg-surface-container-high transition-colors font-bold text-[18px]" type="button">
+                  -5
+                </button>
+<button class="w-8 h-9 rounded bg-surface-container border border-outline-variant flex items-center justify-center text-on-surface hover:bg-surface-container-high transition-colors font-bold text-[16px]" type="button">
+                  -1
+                </button>
+<input class="h-9 flex-1 text-center font-mono-data font-mono-data rounded bg-surface-container-low border border-outline-variant text-on-surface font-semibold focus:outline-none focus:border-secondary" type="number" value="142"/>
+<button class="w-8 h-9 rounded bg-surface-container border border-outline-variant flex items-center justify-center text-on-surface hover:bg-surface-container-high transition-colors font-bold text-[16px]" type="button">
+                  +1
+                </button>
+<button class="w-9 h-9 rounded bg-surface-container border border-outline-variant flex items-center justify-center text-on-surface hover:bg-surface-container-high transition-colors font-bold text-[18px]" type="button">
+                  +5
+                </button>
+</div>
+</div>
+<!-- Override Status Dropdown -->
+<div>
+<label class="block text-label-sm font-label-sm text-on-surface mb-1">Override Operational Status</label>
+<div class="relative">
+<select class="w-full h-9 pl-3 pr-8 rounded bg-surface-container-low border border-outline-variant text-body-sm font-body-sm text-on-surface focus:outline-none focus:border-secondary appearance-none">
+<option selected="">Operational (Normal Ingress/Egress)</option>
+<option>Event Surge (Dynamic Throttle)</option>
+<option>Restricted (Authorized Permit Only)</option>
+<option>Emergency Closed (Safety Hazard)</option>
+</select>
+<span class="material-symbols-outlined absolute right-2.5 top-2.5 text-[16px] text-outline pointer-events-none" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+<!-- Operator Reason Code -->
+<div>
+<label class="block text-label-sm font-label-sm text-on-surface mb-1">Audit Reason Code</label>
+<div class="relative">
+<select class="w-full h-9 pl-3 pr-8 rounded bg-surface-container-low border border-outline-variant text-body-sm font-body-sm text-on-surface focus:outline-none focus:border-secondary appearance-none">
+<option>RC-204: Ultrasonic Sensor Routine Calibration</option>
+<option>RC-102: Special Civic Event / Street Closure</option>
+<option>RC-308: Severe Weather / Flood Mitigation</option>
+<option>RC-401: Barrier Gate Loop Hardware Fault</option>
+</select>
+<span class="material-symbols-outlined absolute right-2.5 top-2.5 text-[16px] text-outline pointer-events-none" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="pt-2 flex flex-col gap-2">
+<button class="w-full h-9 rounded-lg bg-primary text-on-primary text-label-md font-label-md font-semibold hover:bg-on-primary-fixed-variant transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]" data-icon="check_circle">check_circle</span>
+<span>Commit Status Update</span>
+</button>
+<button class="w-full h-8 rounded-lg border border-outline-variant hover:bg-surface-container text-body-sm font-body-sm text-on-surface flex items-center justify-center gap-1.5 transition-colors">
+<span class="material-symbols-outlined text-[16px] text-outline" data-icon="network_ping">network_ping</span>
+<span>Trigger Sensor Self-Test (Ping Mesh)</span>
+</button>
+</div>
+</div>
+<!-- Academic Prototype Legal Note -->
+<div class="pt-2 border-t border-outline-variant text-[10px] font-mono-timestamp text-outline leading-tight">
+            * ParkX Academic Prototype v2.4. Telemetry changes reflect in simulated GIS model only. Production bypass disabled.
+          </div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ParkX Transit — Parking Availability Prediction</title>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts: Inter & JetBrains Mono -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "inverse-surface": "#213145",
+            "error": "#ba1a1a",
+            "surface-dim": "#cbdbf5",
+            "primary-container": "#131b2e",
+            "error-container": "#ffdad6",
+            "on-primary-container": "#7c839b",
+            "background": "#f8f9ff",
+            "tertiary": "#000000",
+            "on-primary-fixed": "#131b2e",
+            "secondary-fixed-dim": "#89ceff",
+            "tertiary-fixed": "#6ffbbe",
+            "surface": "#f8f9ff",
+            "on-error-container": "#93000a",
+            "on-surface-variant": "#45464d",
+            "primary-fixed": "#dae2fd",
+            "tertiary-fixed-dim": "#4edea3",
+            "secondary-container": "#39b8fd",
+            "surface-variant": "#d3e4fe",
+            "on-secondary-fixed": "#001e2f",
+            "on-secondary-fixed-variant": "#004c6e",
+            "surface-tint": "#565e74",
+            "on-background": "#0b1c30",
+            "surface-container-low": "#eff4ff",
+            "on-primary": "#ffffff",
+            "on-tertiary": "#ffffff",
+            "outline": "#76777d",
+            "inverse-on-surface": "#eaf1ff",
+            "on-secondary-container": "#004666",
+            "inverse-primary": "#bec6e0",
+            "secondary": "#006591",
+            "on-tertiary-fixed-variant": "#005236",
+            "on-tertiary-container": "#009668",
+            "on-primary-fixed-variant": "#3f465c",
+            "outline-variant": "#c6c6cd",
+            "surface-container-lowest": "#ffffff",
+            "surface-bright": "#f8f9ff",
+            "on-error": "#ffffff",
+            "on-surface": "#0b1c30",
+            "surface-container-high": "#dce9ff",
+            "on-tertiary-fixed": "#002113",
+            "surface-container-highest": "#d3e4fe",
+            "surface-container": "#e5eeff",
+            "primary-fixed-dim": "#bec6e0",
+            "primary": "#000000",
+            "on-secondary": "#ffffff",
+            "tertiary-container": "#002113",
+            "secondary-fixed": "#c9e6ff"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "margin": "1.5rem",
+            "gutter-compact": "0.5rem",
+            "space-xl": "1.75rem",
+            "margin-mobile": "0.75rem",
+            "gutter": "1rem",
+            "space-sm": "0.5rem",
+            "space-lg": "1.25rem",
+            "space-xs": "0.25rem",
+            "space-md": "0.75rem"
+          },
+          "fontFamily": {
+            "label-md": ["Inter"],
+            "body-lg": ["Inter"],
+            "mono-timestamp": ["JetBrains Mono"],
+            "mono-metric": ["JetBrains Mono"],
+            "display": ["Inter"],
+            "headline-lg-mobile": ["Inter"],
+            "body-md": ["Inter"],
+            "label-sm": ["Inter"],
+            "headline-lg": ["Inter"],
+            "headline-md": ["Inter"],
+            "headline-sm": ["Inter"],
+            "body-sm": ["Inter"],
+            "mono-data": ["JetBrains Mono"]
+          },
+          "fontSize": {
+            "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.005em", "fontWeight": "400" }],
+            "mono-timestamp": ["10px", { "lineHeight": "12px", "letterSpacing": "0.04em", "fontWeight": "400" }],
+            "mono-metric": ["24px", { "lineHeight": "28px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "display": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.025em", "fontWeight": "700" }],
+            "headline-lg-mobile": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+            "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400" }],
+            "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.025em", "fontWeight": "500" }],
+            "headline-lg": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "headline-md": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+            "headline-sm": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "body-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0em", "fontWeight": "400" }],
+            "mono-data": ["12px", { "lineHeight": "16px", "letterSpacing": "0em", "fontWeight": "500" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.4); opacity: 0.6; }
+    }
+    .animate-pulse-dot {
+      animation: pulse-dot 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface min-h-screen font-body-md antialiased flex">
+<!-- PERSISTENT SIDEBAR NAVIGATION (ParkX Transit GIS Shell) -->
+<aside class="fixed top-0 left-0 h-screen w-60 z-40 bg-surface-container-lowest dark:bg-primary-container border-r border-outline-variant dark:border-outline flex flex-col justify-between p-4">
+<div class="flex flex-col gap-5">
+<!-- App Header & Mark -->
+<div class="flex items-center gap-3 px-1">
+<div class="w-9 h-9 rounded-lg bg-inverse-surface flex items-center justify-center text-on-primary font-headline-sm font-bold shadow-sm">
+<span class="material-symbols-outlined text-secondary-fixed text-xl" style="font-variation-settings: 'FILL' 1;">local_parking</span>
+</div>
+<div class="flex flex-col">
+<span class="text-headline-md font-headline-md tracking-tight font-bold text-on-surface dark:text-inverse-on-surface">ParkX Transit</span>
+<span class="text-mono-timestamp font-mono-timestamp text-on-surface-variant dark:text-outline-variant">GIS Operations Platform</span>
+</div>
+</div>
+<!-- Prototype Simulation Tag -->
+<div class="px-2.5 py-1.5 rounded-lg bg-surface-container-low border border-outline-variant/60 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span class="text-label-sm font-label-sm text-secondary font-semibold">Simulation Mode</span>
+</div>
+<span class="text-mono-timestamp font-mono-timestamp text-on-surface-variant font-medium">v2.4</span>
+</div>
+<!-- Main Navigation Menu -->
+<nav class="flex flex-col gap-1 mt-1">
+<!-- Overview -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant dark:text-outline-variant hover:text-on-surface dark:hover:text-inverse-on-surface hover:bg-surface-container-low dark:hover:bg-surface-variant/30 transition-colors duration-150 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined text-lg">dashboard</span>
+<span class="text-label-md font-label-md">Overview</span>
+</a>
+<!-- Explore Map -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant dark:text-outline-variant hover:text-on-surface dark:hover:text-inverse-on-surface hover:bg-surface-container-low dark:hover:bg-surface-variant/30 transition-colors duration-150 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined text-lg">map</span>
+<span class="text-label-md font-label-md">Explore Map</span>
+</a>
+<!-- Parking Availability -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant dark:text-outline-variant hover:text-on-surface dark:hover:text-inverse-on-surface hover:bg-surface-container-low dark:hover:bg-surface-variant/30 transition-colors duration-150 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined text-lg">local_parking</span>
+<span class="text-label-md font-label-md">Parking Availability</span>
+</a>
+<!-- Availability Prediction (MANDATORY ACTIVE TAB) -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-surface-container-high dark:bg-surface-tint/20 text-on-surface dark:text-inverse-on-surface font-semibold active:scale-[0.98] transition-transform duration-100 ease-out border-l-2 border-secondary pl-2.5" href="#">
+<span class="material-symbols-outlined text-lg text-secondary" style="font-variation-settings: 'FILL' 1;">timeline</span>
+<span class="text-label-md font-label-md text-on-surface">Availability Prediction</span>
+</a>
+<!-- Parking Recommendations -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant dark:text-outline-variant hover:text-on-surface dark:hover:text-inverse-on-surface hover:bg-surface-container-low dark:hover:bg-surface-variant/30 transition-colors duration-150 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined text-lg">recommend</span>
+<span class="text-label-md font-label-md">Parking Recommendations</span>
+</a>
+<!-- Public Transit -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant dark:text-outline-variant hover:text-on-surface dark:hover:text-inverse-on-surface hover:bg-surface-container-low dark:hover:bg-surface-variant/30 transition-colors duration-150 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined text-lg">directions_transit</span>
+<span class="text-label-md font-label-md">Public Transit</span>
+</a>
+<!-- Analytics -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant dark:text-outline-variant hover:text-on-surface dark:hover:text-inverse-on-surface hover:bg-surface-container-low dark:hover:bg-surface-variant/30 transition-colors duration-150 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined text-lg">analytics</span>
+<span class="text-label-md font-label-md">Analytics</span>
+</a>
+<!-- Administration -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant dark:text-outline-variant hover:text-on-surface dark:hover:text-inverse-on-surface hover:bg-surface-container-low dark:hover:bg-surface-variant/30 transition-colors duration-150 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined text-lg">admin_panel_settings</span>
+<span class="text-label-md font-label-md">Administration</span>
+</a>
+</nav>
+</div>
+<!-- Footer Controls -->
+<div class="flex flex-col gap-1 pt-3 border-t border-outline-variant/50">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant dark:text-outline-variant hover:text-on-surface dark:hover:text-inverse-on-surface hover:bg-surface-container-low dark:hover:bg-surface-variant/30 transition-colors duration-150" href="#">
+<span class="material-symbols-outlined text-lg">sensors</span>
+<span class="text-label-md font-label-md">System Health</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant dark:text-outline-variant hover:text-on-surface dark:hover:text-inverse-on-surface hover:bg-surface-container-low dark:hover:bg-surface-variant/30 transition-colors duration-150" href="#">
+<span class="material-symbols-outlined text-lg">tune</span>
+<span class="text-label-md font-label-md">Settings</span>
+</a>
+<!-- Operator Session Tag -->
+<div class="mt-2 px-3 py-2 bg-surface-container-low rounded-lg flex items-center justify-between text-mono-timestamp font-mono-timestamp text-on-surface-variant">
+<span>OP-NODE: 884-MUNI</span>
+<span class="text-on-tertiary-container font-semibold">ONLINE</span>
+</div>
+</div>
+</aside>
+<!-- MAIN WRAPPER (Offset by Sidebar: 240px) -->
+<div class="flex-1 ml-60 flex flex-col min-h-screen">
+<!-- TOP NAVIGATION BAR -->
+<header class="fixed top-0 right-0 left-60 h-14 z-30 bg-surface-container-lowest/95 backdrop-blur-md border-b border-outline-variant flex items-center justify-between px-6">
+<!-- Left: Omnibar & Breadcrumb -->
+<div class="flex items-center gap-4 w-1/2">
+<div class="flex items-center gap-2 text-label-md font-label-md text-on-surface-variant">
+<span class="text-secondary font-medium">Operations Hub</span>
+<span class="text-outline-variant">/</span>
+<span class="text-on-surface font-semibold">Availability Prediction</span>
+</div>
+<div class="relative flex-1 max-w-sm">
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-outline text-lg pointer-events-none">search</span>
+<input class="w-full h-9 pl-9 pr-8 text-body-sm font-body-sm rounded-lg bg-surface border border-outline-variant focus:outline-none focus:ring-1 focus:ring-secondary focus:border-secondary transition-all" placeholder="Search facilities, sensors, models... (⌘K)" type="text"/>
+<span class="absolute right-2.5 top-2.5 text-mono-timestamp font-mono-timestamp px-1.5 py-0.5 rounded bg-surface-container-high text-on-surface-variant border border-outline-variant/60">⌘K</span>
+</div>
+</div>
+<!-- Right: Telemetry Badges & Operator Controls -->
+<div class="flex items-center gap-3">
+<!-- Live Simulation Badge -->
+<div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-label-sm font-label-sm">
+<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse-dot"></span>
+<span class="font-semibold tracking-tight">Simulation Live</span>
+</div>
+<!-- Simulated Data Trust Pill -->
+<div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-purple-50 border border-purple-200 text-purple-900 text-mono-timestamp font-mono-timestamp">
+<span class="material-symbols-outlined text-purple-700 text-sm">science</span>
+<span>SIMULATED DEMO DATA • 14:36:04 UTC</span>
+</div>
+<!-- Action: Sync Telemetry -->
+<button class="flex items-center gap-1.5 px-3 py-1.5 text-label-md font-label-md text-on-surface bg-surface-container-low hover:bg-surface-container border border-outline-variant rounded-lg transition-colors active:scale-[0.98]">
+<span class="material-symbols-outlined text-base text-secondary">sync</span>
+<span>Sync Telemetry</span>
+</button>
+<!-- Vertical Separator -->
+<div class="h-6 w-px bg-outline-variant"></div>
+<!-- Trailing Icon Actions -->
+<div class="flex items-center gap-1 text-on-surface-variant">
+<button class="p-1.5 rounded-lg hover:bg-surface-container-low hover:text-on-surface transition-colors" title="Notifications">
+<span class="material-symbols-outlined text-xl">notifications</span>
+</button>
+<button class="p-1.5 rounded-lg hover:bg-surface-container-low hover:text-on-surface transition-colors" title="Documentation &amp; Guidance">
+<span class="material-symbols-outlined text-xl">help</span>
+</button>
+</div>
+<!-- Profile Avatar -->
+<div class="flex items-center gap-2 pl-2">
+<div class="w-8 h-8 rounded-full bg-inverse-surface text-on-primary flex items-center justify-center font-semibold text-xs border border-outline-variant" title="Municipal Transit Operator">
+            MO
+          </div>
+</div>
+</div>
+</header>
+<!-- MAIN VIEWPORT CONTENT (Top Padding for 56px Header) -->
+<main class="flex-1 mt-14 p-6 flex flex-col gap-5 max-w-[1720px] w-full mx-auto">
+<!-- PAGE HEADER & SUBTITLE -->
+<section class="flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<h1 class="text-headline-lg font-headline-lg text-on-surface tracking-tight">Parking Availability Prediction &amp; Time-Horizon Forecasting</h1>
+<div class="flex items-center gap-2">
+<span class="text-mono-timestamp font-mono-timestamp text-on-surface-variant">Last Inference Run: 14:35:12 UTC</span>
+<span class="px-2 py-0.5 rounded text-mono-timestamp font-mono-timestamp bg-surface-container-high text-secondary border border-secondary/20">Latency: 18ms</span>
+</div>
+</div>
+<p class="text-body-md font-body-md text-on-surface-variant max-w-4xl">
+          Compare real-time sensor observations with predictive machine-learning models (Random Forest Ensemble &amp; Gradient Boosting) across custom arrival time horizons.
+        </p>
+</section>
+<!-- INTERACTIVE CONTROL & PARAMETER BAR (Glass/Elevated Level 1) -->
+<section class="bg-surface-container-lowest border border-outline-variant rounded-xl p-3.5 shadow-sm flex flex-wrap items-center justify-between gap-3">
+<div class="flex flex-wrap items-center gap-3">
+<!-- Control 1: Facility Selector -->
+<div class="flex flex-col gap-1">
+<label class="text-label-sm font-label-sm text-on-surface-variant uppercase tracking-wider">Facility &amp; Deck</label>
+<div class="relative">
+<select class="h-9 pl-3 pr-8 text-label-md font-label-md text-on-surface bg-surface border border-outline-variant rounded-lg focus:ring-1 focus:ring-secondary focus:border-secondary cursor-pointer">
+<option selected="">Civic Center North Deck (PK-101 - 450 bays)</option>
+<option>Metro Central Hub (PK-204 - 820 bays)</option>
+<option>West Tech Plaza (PK-312 - 340 bays)</option>
+<option>Riverfront Park &amp; Ride (PK-092 - 600 bays)</option>
+</select>
+</div>
+</div>
+<!-- Control 2: Date Selector -->
+<div class="flex flex-col gap-1">
+<label class="text-label-sm font-label-sm text-on-surface-variant uppercase tracking-wider">Observation Date</label>
+<div class="flex items-center h-9 px-3 bg-surface border border-outline-variant rounded-lg text-label-md font-label-md text-on-surface gap-2">
+<span class="material-symbols-outlined text-outline text-base">calendar_today</span>
+<span>Today (Thursday, Oct 24, 2024)</span>
+</div>
+</div>
+<!-- Control 3: Target Horizon / Arrival Time -->
+<div class="flex flex-col gap-1">
+<label class="text-label-sm font-label-sm text-on-surface-variant uppercase tracking-wider">Target Arrival Horizon</label>
+<div class="flex items-center h-9 px-3 bg-secondary-fixed/30 border border-secondary/40 rounded-lg text-label-md font-label-md text-on-surface font-semibold gap-2">
+<span class="material-symbols-outlined text-secondary text-base">schedule</span>
+<span>17:30 (Peak Evening Ingress - +3.0 hrs)</span>
+</div>
+</div>
+<!-- Control 4: Model Selector Group -->
+<div class="flex flex-col gap-1">
+<label class="text-label-sm font-label-sm text-on-surface-variant uppercase tracking-wider">Inference Model</label>
+<div class="flex items-center bg-surface-container-low p-0.5 rounded-lg border border-outline-variant">
+<button class="px-2.5 py-1 text-label-sm font-label-sm rounded-md bg-surface-container-lowest text-on-surface font-semibold shadow-xs border border-outline-variant/40">
+                Random Forest (v2.1)
+              </button>
+<button class="px-2.5 py-1 text-label-sm font-label-sm rounded-md text-on-surface-variant hover:text-on-surface">
+                XGBoost v1.4
+              </button>
+<button class="px-2.5 py-1 text-label-sm font-label-sm rounded-md text-on-surface-variant hover:text-on-surface">
+                Historical Moving Avg
+              </button>
+</div>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="flex items-center gap-2 pt-1 sm:pt-0">
+<button class="h-9 px-3 text-label-md font-label-md text-on-surface bg-surface hover:bg-surface-container-low border border-outline-variant rounded-lg flex items-center gap-1.5 transition-colors active:scale-[0.98]">
+<span class="material-symbols-outlined text-base">file_download</span>
+<span>Export Forecast GeoJSON/CSV</span>
+</button>
+<button class="h-9 px-4 text-label-md font-label-md font-semibold text-on-primary bg-primary hover:bg-inverse-surface rounded-lg flex items-center gap-2 shadow-xs transition-colors active:scale-[0.98]">
+<span class="material-symbols-outlined text-base text-secondary-fixed">play_arrow</span>
+<span>Run Inference Simulation</span>
+</button>
+</div>
+</section>
+<!-- KEY METRIC KPI CARDS (4-Column Bento Layout) -->
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+<!-- Card 1: Current Sensor Occupancy -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between mb-2">
+<span class="text-label-sm font-label-sm uppercase tracking-wider text-on-surface-variant">Current Sensor Occupancy</span>
+<span class="px-2 py-0.5 rounded text-mono-timestamp font-mono-timestamp bg-amber-50 text-amber-800 border border-amber-200">
+              Moderate / Ingress
+            </span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="text-mono-metric font-mono-metric text-on-surface">68.4%</span>
+<span class="text-body-sm font-body-sm text-on-surface-variant">at 14:35 UTC</span>
+</div>
+<div class="w-full bg-surface-container-high rounded-full h-1.5 my-2.5 overflow-hidden">
+<div class="bg-secondary h-1.5 rounded-full" style="width: 68.4%"></div>
+</div>
+<div class="flex items-center justify-between text-mono-data font-mono-data text-on-surface-variant">
+<span>308 / 450 bays occupied</span>
+<span class="text-emerald-700 font-semibold">142 free</span>
+</div>
+</div>
+<!-- Card 2: Predicted Arrival Occupancy -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 shadow-sm flex flex-col justify-between relative overflow-hidden">
+<div class="absolute top-0 right-0 left-0 h-1 bg-red-500"></div>
+<div class="flex items-center justify-between mb-2">
+<span class="text-label-sm font-label-sm uppercase tracking-wider text-on-surface-variant">Predicted Occupancy (17:30)</span>
+<span class="px-2 py-0.5 rounded text-mono-timestamp font-mono-timestamp bg-red-50 text-red-800 border border-red-200 font-medium">
+              Congestion Risk
+            </span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="text-mono-metric font-mono-metric text-red-700">86.2%</span>
+<span class="text-body-sm font-body-sm text-red-600 font-medium">+3.0h horizon</span>
+</div>
+<div class="w-full bg-surface-container-high rounded-full h-1.5 my-2.5 overflow-hidden">
+<div class="bg-red-600 h-1.5 rounded-full" style="width: 86.2%"></div>
+</div>
+<div class="flex items-center justify-between text-mono-data font-mono-data text-on-surface-variant">
+<span>388 predicted bays</span>
+<span class="text-red-700 font-semibold">Only 62 spaces free</span>
+</div>
+</div>
+<!-- Card 3: Predicted Delta & Surge Window -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between mb-2">
+<span class="text-label-sm font-label-sm uppercase tracking-wider text-on-surface-variant">Predicted Delta &amp; Surge</span>
+<span class="px-2 py-0.5 rounded text-mono-timestamp font-mono-timestamp bg-secondary-fixed/50 text-secondary border border-secondary/30">
+              Commute Wave
+            </span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="text-mono-metric font-mono-metric text-secondary">+17.8%</span>
+<span class="text-body-sm font-body-sm text-on-surface-variant">+80 vehicles</span>
+</div>
+<div class="text-body-sm font-body-sm text-on-surface-variant my-1">
+            Net inflow between 14:30 and 17:30 UTC
+          </div>
+<div class="flex items-center justify-between text-mono-data font-mono-data text-on-surface-variant border-t border-outline-variant/40 pt-1.5">
+<span>Peak Window:</span>
+<span class="font-semibold text-on-surface">17:15 – 18:00</span>
+</div>
+</div>
+<!-- Card 4: Model Accuracy & Confidence Score -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between mb-2">
+<span class="text-label-sm font-label-sm uppercase tracking-wider text-on-surface-variant">Model Confidence Score</span>
+<span class="px-2 py-0.5 rounded text-mono-timestamp font-mono-timestamp bg-emerald-50 text-emerald-800 border border-emerald-200">
+              High Confidence
+            </span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="text-mono-metric font-mono-metric text-emerald-700">94.6%</span>
+<span class="text-mono-data font-mono-data text-on-surface-variant">Simulated Eval</span>
+</div>
+<div class="text-body-sm font-body-sm text-on-surface-variant my-1">
+            Mean Absolute Error: <span class="font-mono text-on-surface font-medium">3.8%</span> (±12 bays)
+          </div>
+<div class="flex items-center justify-between text-mono-data font-mono-data text-on-surface-variant border-t border-outline-variant/40 pt-1.5">
+<span>RMSE: 5.1 bays</span>
+<span class="text-secondary font-medium">95% Band: ±4.2%</span>
+</div>
+</div>
+</section>
+<!-- MAIN CONTENT SPLIT (70% Left / 30% Right) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-5 mb-8">
+<!-- LEFT COLUMN: MASTER FORECAST CHART & BENCHMARK TABLE (8 of 12 cols = 66.6% -> ~70%) -->
+<div class="lg:col-span-8 flex flex-col gap-5">
+<!-- 1. Master Predictive Time-Series Chart -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-sm flex flex-col gap-4">
+<!-- Chart Header & Visual Legend -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-outline-variant/50 pb-4">
+<div>
+<h2 class="text-headline-sm font-headline-sm text-on-surface">Historical Observed Telemetry vs. Multi-Model Forecast (06:00 - 23:00)</h2>
+<span class="text-body-sm font-body-sm text-on-surface-variant">Facility: Civic Center North Deck (450 total bays) • Time resolution: 15-min intervals</span>
+</div>
+<div class="flex items-center gap-1.5 self-start sm:self-auto">
+<span class="px-2 py-1 text-mono-timestamp font-mono-timestamp rounded bg-surface-container-high text-on-surface font-medium">Target: 17:30 (+3h)</span>
+</div>
+</div>
+<!-- Legend Items -->
+<div class="flex flex-wrap items-center gap-y-2 gap-x-5 text-label-sm font-label-sm text-on-surface-variant bg-surface-container-low/60 p-2.5 rounded-lg border border-outline-variant/50">
+<div class="flex items-center gap-1.5">
+<span class="w-4 h-0.5 bg-inverse-surface rounded"></span>
+<span>Actual Sensor Telemetry (06:00 – 14:35)</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-4 h-0.5 border-t-2 border-dashed border-emerald-600"></span>
+<span class="text-on-surface font-medium">Random Forest Forecast (Selected)</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-4 h-0.5 border-t-2 border-dotted border-purple-600"></span>
+<span>Gradient Boosting (XGBoost)</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-3.5 h-3 bg-secondary/15 border border-secondary/30 rounded-xs"></span>
+<span>95% Confidence Interval (±4.2%)</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-4 h-0.5 border-t-2 border-dashed border-red-500"></span>
+<span class="text-red-700 font-semibold">Target Arrival (17:30)</span>
+</div>
+</div>
+<!-- Interactive High-Fidelity SVG Graphic Chart -->
+<div class="relative w-full h-[360px] bg-surface rounded-lg border border-outline-variant/60 p-2 overflow-hidden flex flex-col justify-between">
+<svg class="w-full h-full overflow-visible" viewbox="0 0 880 320">
+<defs>
+<!-- Confidence Interval Gradient -->
+<lineargradient id="ciGradient" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#006591" stop-opacity="0.18"></stop>
+<stop offset="100%" stop-color="#006591" stop-opacity="0.03"></stop>
+</lineargradient>
+<!-- Historical Area Gradient -->
+<lineargradient id="histGradient" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#0b1c30" stop-opacity="0.10"></stop>
+<stop offset="100%" stop-color="#0b1c30" stop-opacity="0.0"></stop>
+</lineargradient>
+</defs>
+<!-- Horizontal Grid Lines (Occupancy %) -->
+<!-- 100% Line (y = 25) -->
+<line stroke="#cbd5e1" stroke-dasharray="3,3" stroke-width="1" x1="50" x2="850" y1="25" y2="25"></line>
+<text fill="#64748b" font-family="JetBrains Mono" font-size="10" text-anchor="end" x="42" y="29">100%</text>
+<!-- 80% Line (y = 75) -->
+<line stroke="#e2e8f0" stroke-width="1" x1="50" x2="850" y1="75" y2="75"></line>
+<text fill="#64748b" font-family="JetBrains Mono" font-size="10" text-anchor="end" x="42" y="79">80%</text>
+<!-- 60% Line (y = 135) -->
+<line stroke="#e2e8f0" stroke-width="1" x1="50" x2="850" y1="135" y2="135"></line>
+<text fill="#64748b" font-family="JetBrains Mono" font-size="10" text-anchor="end" x="42" y="139">60%</text>
+<!-- 40% Line (y = 195) -->
+<line stroke="#e2e8f0" stroke-width="1" x1="50" x2="850" y1="195" y2="195"></line>
+<text fill="#64748b" font-family="JetBrains Mono" font-size="10" text-anchor="end" x="42" y="199">40%</text>
+<!-- 20% Line (y = 255) -->
+<line stroke="#e2e8f0" stroke-width="1" x1="50" x2="850" y1="255" y2="255"></line>
+<text fill="#64748b" font-family="JetBrains Mono" font-size="10" text-anchor="end" x="42" y="259">20%</text>
+<!-- 0% Baseline (y = 295) -->
+<line stroke="#94a3b8" stroke-width="1.2" x1="50" x2="850" y1="295" y2="295"></line>
+<text fill="#64748b" font-family="JetBrains Mono" font-size="10" text-anchor="end" x="42" y="298">0%</text>
+<!-- TIME X-AXIS TICKS & LABELS -->
+<!-- 06:00 (x=50) -->
+<line stroke="#64748b" x1="50" x2="50" y1="295" y2="300"></line>
+<text fill="#64748b" font-family="JetBrains Mono" font-size="10" text-anchor="middle" x="50" y="312">06:00</text>
+<!-- 08:00 (x=135) -->
+<line stroke="#64748b" x1="135" x2="135" y1="295" y2="300"></line>
+<text fill="#64748b" font-family="JetBrains Mono" font-size="10" text-anchor="middle" x="135" y="312">08:00</text>
+<!-- 10:00 (x=225) -->
+<line stroke="#64748b" x1="225" x2="225" y1="295" y2="300"></line>
+<text fill="#64748b" font-family="JetBrains Mono" font-size="10" text-anchor="middle" x="225" y="312">10:00</text>
+<!-- 12:00 (x=315) -->
+<line stroke="#64748b" x1="315" x2="315" y1="295" y2="300"></line>
+<text fill="#64748b" font-family="JetBrains Mono" font-size="10" text-anchor="middle" x="315" y="312">12:00</text>
+<!-- 14:35 NOW (x=430) -->
+<line stroke="#006591" stroke-width="1.5" x1="430" x2="430" y1="295" y2="300"></line>
+<text fill="#006591" font-family="JetBrains Mono" font-size="10" font-weight="600" text-anchor="middle" x="430" y="312">14:35 NOW</text>
+<!-- 16:00 (x=495) -->
+<line stroke="#64748b" x1="495" x2="495" y1="295" y2="300"></line>
+<text fill="#64748b" font-family="JetBrains Mono" font-size="10" text-anchor="middle" x="495" y="312">16:00</text>
+<!-- 17:30 TARGET PEAK (x=565) -->
+<line stroke="#dc2626" stroke-width="1.5" x1="565" x2="565" y1="295" y2="300"></line>
+<text fill="#dc2626" font-family="JetBrains Mono" font-size="10" font-weight="700" text-anchor="middle" x="565" y="312">17:30 PEAK</text>
+<!-- 19:00 (x=635) -->
+<line stroke="#64748b" x1="635" x2="635" y1="295" y2="300"></line>
+<text fill="#64748b" font-family="JetBrains Mono" font-size="10" text-anchor="middle" x="635" y="312">19:00</text>
+<!-- 21:00 (x=730) -->
+<line stroke="#64748b" x1="730" x2="730" y1="295" y2="300"></line>
+<text fill="#64748b" font-family="JetBrains Mono" font-size="10" text-anchor="middle" x="730" y="312">21:00</text>
+<!-- 23:00 (x=830) -->
+<line stroke="#64748b" x1="830" x2="830" y1="295" y2="300"></line>
+<text fill="#64748b" font-family="JetBrains Mono" font-size="10" text-anchor="middle" x="830" y="312">23:00</text>
+<!-- 95% Confidence Interval Band (From 14:35 to 23:00) -->
+<path d="M 430,110 
+                         C 490,95 530,68 565,52 
+                         C 600,38 650,60 700,90 
+                         C 750,120 790,165 830,190
+                         L 830,225
+                         C 790,200 750,155 700,128
+                         C 650,98 600,75 565,72
+                         C 530,86 490,118 430,110 Z" fill="url(#ciGradient)"></path>
+<!-- Shaded Historical Observation Area (06:00 to 14:35) -->
+<path d="M 50,260 
+                         C 80,250 110,215 135,175 
+                         C 160,135 190,122 225,120 
+                         C 260,118 290,132 315,130 
+                         C 350,127 390,118 430,110 
+                         L 430,295 L 50,295 Z" fill="url(#histGradient)"></path>
+<!-- Vertical NOW Line (14:35) -->
+<line stroke="#006591" stroke-dasharray="2,2" stroke-width="1.5" x1="430" x2="430" y1="25" y2="295"></line>
+<!-- Vertical TARGET Line (17:30) -->
+<line stroke="#dc2626" stroke-dasharray="4,4" stroke-width="2" x1="565" x2="565" y1="25" y2="295"></line>
+<!-- 1. Actual Sensor Telemetry Path (Solid Dark Blue) -->
+<path d="M 50,260 
+                         C 80,250 110,215 135,175 
+                         C 160,135 190,122 225,120 
+                         C 260,118 290,132 315,130 
+                         C 350,127 390,118 430,110" fill="none" stroke="#0b1c30" stroke-linecap="round" stroke-width="2.5"></path>
+<!-- Point at NOW (14:35) -->
+<circle cx="430" cy="110" fill="#006591" r="4.5" stroke="#ffffff" stroke-width="2"></circle>
+<!-- 2. Gradient Boosting Forecast (Dotted Purple) -->
+<path d="M 430,110 
+                         C 480,95 525,72 565,58 
+                         C 605,48 650,78 700,108 
+                         C 750,138 790,185 830,215" fill="none" stroke="#7e22ce" stroke-dasharray="3,3" stroke-linecap="round" stroke-width="2"></path>
+<!-- 3. Random Forest Candidate Forecast (Dashed Emerald) -->
+<path d="M 430,110 
+                         C 485,98 530,76 565,62 
+                         C 600,50 645,70 700,105 
+                         C 745,135 785,175 830,205" fill="none" stroke="#059669" stroke-dasharray="5,4" stroke-linecap="round" stroke-width="2.8"></path>
+<!-- Point at Target (17:30) Peak Forecast -->
+<circle cx="565" cy="62" fill="#dc2626" r="5" stroke="#ffffff" stroke-width="2"></circle>
+<!-- CALLOUT TOOLTIP OVERLAY AT 17:30 -->
+<g transform="translate(565, 30)">
+<rect fill="#0f172a" height="30" opacity="0.95" rx="4" width="250" x="-125" y="-36"></rect>
+<polygon fill="#0f172a" opacity="0.95" points="0, -6 -6, -11 6, -11"></polygon>
+<text fill="#ffffff" font-family="Inter" font-size="10.5" font-weight="600" text-anchor="middle" x="0" y="-17">
+                    Predicted: 86.2% (62 Free Bays) • Conf: High (±8)
+                  </text>
+</g>
+<!-- Annotation Callout for NOW -->
+<g transform="translate(430, 110)">
+<circle cx="0" cy="0" fill="none" opacity="0.4" r="10" stroke="#006591" stroke-width="1"></circle>
+</g>
+</svg>
+<!-- Chart Micro-Status Bar -->
+<div class="flex items-center justify-between text-mono-timestamp font-mono-timestamp text-on-surface-variant pt-2 border-t border-outline-variant/40 px-1">
+<span>SENSOR STREAM: LOOP-PK101-ARRAY (STABLE)</span>
+<span>DATA INTEGRITY: 100% SAMPLES VERIFIED</span>
+<span>FORECAST HORIZON: +8.5 HRS CONVERGENCE</span>
+</div>
+</div>
+</div>
+<!-- 2. Multi-Model Benchmark Comparison Table -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-sm flex flex-col gap-3">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+<div>
+<h3 class="text-headline-sm font-headline-sm text-on-surface">Predictive Machine Learning Benchmark Comparison</h3>
+<span class="text-body-sm font-body-sm text-on-surface-variant">Validated against historical holdout telemetry partitions</span>
+</div>
+<!-- Academic Benchmark Pill -->
+<span class="px-2.5 py-1 rounded bg-surface-container-high text-on-surface font-mono-timestamp text-mono-timestamp font-medium border border-outline-variant">
+                ACADEMIC BENCHMARK: Trained on 90-day simulated municipal inductive loop dataset
+              </span>
+</div>
+<!-- Table Layout -->
+<div class="overflow-x-auto mt-1">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-outline-variant bg-surface-container-low/50 text-label-sm font-label-sm text-on-surface-variant">
+<th class="py-2.5 px-3">Model Architecture</th>
+<th class="py-2.5 px-3">Mean Abs Error (MAE)</th>
+<th class="py-2.5 px-3">RMSE</th>
+<th class="py-2.5 px-3">Inference Latency</th>
+<th class="py-2.5 px-3">Ingress Surge Sensitivity</th>
+<th class="py-2.5 px-3">Operational Status</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/40 text-body-sm font-body-sm">
+<!-- Model 1: Random Forest (Optimal Candidate) -->
+<tr class="bg-emerald-50/40">
+<td class="py-3 px-3 flex items-center gap-2">
+<span class="material-symbols-outlined text-emerald-700 text-lg">check_circle</span>
+<div>
+<div class="font-semibold text-on-surface">Random Forest Regressor (v2.1)</div>
+<div class="text-mono-timestamp text-on-surface-variant font-mono">150 Trees • Max Depth 16</div>
+</div>
+</td>
+<td class="py-3 px-3 font-mono font-medium text-emerald-800">3.8% (±8 bays)</td>
+<td class="py-3 px-3 font-mono font-medium text-on-surface">5.1%</td>
+<td class="py-3 px-3 font-mono text-on-surface-variant">18ms</td>
+<td class="py-3 px-3">
+<span class="px-2 py-0.5 rounded text-mono-timestamp font-mono-timestamp bg-surface-container-high text-on-surface font-semibold">High</span>
+</td>
+<td class="py-3 px-3">
+<span class="px-2 py-0.5 rounded text-label-sm font-label-sm bg-emerald-100 text-emerald-900 font-semibold border border-emerald-300">
+                        Optimal Candidate
+                      </span>
+</td>
+</tr>
+<!-- Model 2: Gradient Boosted Trees (XGBoost) -->
+<tr class="hover:bg-surface-container-low/30 transition-colors">
+<td class="py-3 px-3 flex items-center gap-2">
+<span class="material-symbols-outlined text-purple-700 text-lg">alt_route</span>
+<div>
+<div class="font-medium text-on-surface">Gradient Boosted Trees (XGBoost v1.4)</div>
+<div class="text-mono-timestamp text-on-surface-variant font-mono">Learning Rate 0.05 • Depth 8</div>
+</div>
+</td>
+<td class="py-3 px-3 font-mono text-on-surface">4.1% (±10 bays)</td>
+<td class="py-3 px-3 font-mono text-on-surface">5.6%</td>
+<td class="py-3 px-3 font-mono text-on-surface-variant">42ms</td>
+<td class="py-3 px-3">
+<span class="px-2 py-0.5 rounded text-mono-timestamp font-mono-timestamp bg-purple-100 text-purple-900 font-semibold">Very High</span>
+</td>
+<td class="py-3 px-3">
+<span class="px-2 py-0.5 rounded text-label-sm font-label-sm bg-surface-container-low text-on-surface border border-outline-variant font-medium">
+                        Alternative
+                      </span>
+</td>
+</tr>
+<!-- Model 3: Historical Baseline -->
+<tr class="hover:bg-surface-container-low/30 transition-colors text-on-surface-variant">
+<td class="py-3 px-3 flex items-center gap-2">
+<span class="material-symbols-outlined text-outline text-lg">history</span>
+<div>
+<div class="font-medium text-on-surface">Historical Moving Average Baseline</div>
+<div class="text-mono-timestamp text-on-surface-variant font-mono">4-Week Rolling Same-Day</div>
+</div>
+</td>
+<td class="py-3 px-3 font-mono text-on-surface-variant">8.4% (±21 bays)</td>
+<td class="py-3 px-3 font-mono text-on-surface-variant">11.2%</td>
+<td class="py-3 px-3 font-mono text-on-surface-variant">2ms</td>
+<td class="py-3 px-3">
+<span class="px-2 py-0.5 rounded text-mono-timestamp font-mono-timestamp bg-surface-container text-on-surface-variant">Low / Lagging</span>
+</td>
+<td class="py-3 px-3">
+<span class="px-2 py-0.5 rounded text-label-sm font-label-sm bg-surface-container text-on-surface-variant border border-outline-variant">
+                        Baseline Only
+                      </span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<!-- RIGHT COLUMN: FEATURE WEIGHTS, MITIGATION GUIDANCE & TRUST NOTE (4 of 12 cols = 33.3% -> ~30%) -->
+<div class="lg:col-span-4 flex flex-col gap-5">
+<!-- 1. Key Feature Importance & Predictive Drivers -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-sm flex flex-col gap-3">
+<div class="flex items-center justify-between border-b border-outline-variant/50 pb-2.5">
+<h3 class="text-headline-sm font-headline-sm text-on-surface">Primary Factors Driving 17:30 Peak</h3>
+<span class="text-mono-timestamp font-mono-timestamp text-secondary font-semibold">SHAP VALUES</span>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant">
+              Breakdown of weighted telemetry and contextual parameters shaping the 86.2% occupancy surge forecast.
+            </p>
+<div class="flex flex-col gap-3.5 mt-1">
+<!-- Factor 1: Hour of Day -->
+<div class="flex flex-col gap-1">
+<div class="flex justify-between items-center text-label-md font-label-md">
+<span class="text-on-surface font-semibold">Hour of Day &amp; Commute Ingress</span>
+<span class="font-mono text-secondary font-bold">34%</span>
+</div>
+<div class="w-full bg-surface-container-high rounded-full h-2 overflow-hidden">
+<div class="bg-secondary h-2 rounded-full" style="width: 34%"></div>
+</div>
+<span class="text-mono-timestamp font-mono-timestamp text-on-surface-variant">Typical downtown corporate exit and municipal inbound overlap</span>
+</div>
+<!-- Factor 2: Day of Week -->
+<div class="flex flex-col gap-1">
+<div class="flex justify-between items-center text-label-md font-label-md">
+<span class="text-on-surface font-semibold">Day of Week (Thursday Metro Peak)</span>
+<span class="font-mono text-secondary font-bold">22%</span>
+</div>
+<div class="w-full bg-surface-container-high rounded-full h-2 overflow-hidden">
+<div class="bg-secondary h-2 rounded-full" style="width: 22%"></div>
+</div>
+<span class="text-mono-timestamp font-mono-timestamp text-on-surface-variant">Highest hybrid-work in-office density day for Civic core</span>
+</div>
+<!-- Factor 3: Proximity to Central Transit -->
+<div class="flex flex-col gap-1">
+<div class="flex justify-between items-center text-label-md font-label-md">
+<span class="text-on-surface font-semibold">Proximity to Route 42 Interchanges</span>
+<span class="font-mono text-secondary font-bold">18%</span>
+</div>
+<div class="w-full bg-surface-container-high rounded-full h-2 overflow-hidden">
+<div class="bg-secondary h-2 rounded-full" style="width: 18%"></div>
+</div>
+<span class="text-mono-timestamp font-mono-timestamp text-on-surface-variant">Direct bus feeder schedule generates secondary spillover parkers</span>
+</div>
+<!-- Factor 4: Sensor Momentum -->
+<div class="flex flex-col gap-1">
+<div class="flex justify-between items-center text-label-md font-label-md">
+<span class="text-on-surface font-semibold">Sensor Momentum (+14 veh/hr)</span>
+<span class="font-mono text-secondary font-bold">15%</span>
+</div>
+<div class="w-full bg-surface-container-high rounded-full h-2 overflow-hidden">
+<div class="bg-secondary h-2 rounded-full" style="width: 15%"></div>
+</div>
+<span class="text-mono-timestamp font-mono-timestamp text-on-surface-variant">Real-time gate ingress velocity over past 45 minutes</span>
+</div>
+<!-- Factor 5: Nearby Events -->
+<div class="flex flex-col gap-1">
+<div class="flex justify-between items-center text-label-md font-label-md">
+<span class="text-on-surface font-semibold">Scheduled Nearby Civic / Arena Events</span>
+<span class="font-mono text-secondary font-bold">11%</span>
+</div>
+<div class="w-full bg-surface-container-high rounded-full h-2 overflow-hidden">
+<div class="bg-secondary h-2 rounded-full" style="width: 11%"></div>
+</div>
+<span class="text-mono-timestamp font-mono-timestamp text-on-surface-variant">Symphony Hall rehearsal schedule (18:00 start)</span>
+</div>
+</div>
+</div>
+<!-- 2. Explanatory Advisory & Recommendation Action -->
+<div class="bg-surface-container-lowest border border-amber-200 rounded-xl p-5 shadow-sm flex flex-col gap-3 relative">
+<div class="flex items-center gap-2 text-amber-800">
+<span class="material-symbols-outlined text-xl">warning</span>
+<h3 class="text-headline-sm font-headline-sm">ParkX Predictive Guidance</h3>
+</div>
+<!-- Critical Notice Alert -->
+<div class="p-3 bg-red-50 rounded-lg border border-red-200 text-body-sm font-body-sm text-red-900 flex flex-col gap-1">
+<div class="font-semibold text-red-800 flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-red-600"></span>
+                Critical Capacity Threshold
+              </div>
+<div>
+                Civic Center North Deck will exceed <span class="font-semibold">85% capacity by 17:15</span>. If your arrival is 17:30, parking will be scarce (approx. 62 bays left).
+              </div>
+</div>
+<!-- Recommended Mitigation -->
+<div class="p-3 bg-surface-container-low rounded-lg border border-outline-variant text-body-sm font-body-sm text-on-surface flex flex-col gap-2">
+<div class="font-semibold text-secondary flex items-center gap-1.5">
+<span class="material-symbols-outlined text-base">directions_bus</span>
+                Recommended Mitigation Route
+              </div>
+<p class="text-on-surface-variant">
+                Consider <strong class="text-on-surface">Riverfront Park &amp; Ride (PK-092)</strong> (predicted 38% occupied at 17:30) with direct connection to Express Bus 10 saving 12 mins in corridor congestion.
+              </p>
+</div>
+<!-- Mitigation Buttons -->
+<div class="flex flex-col gap-2 pt-1">
+<button class="w-full h-9 px-3 text-label-md font-label-md font-semibold text-on-primary bg-primary hover:bg-inverse-surface rounded-lg flex items-center justify-center gap-2 transition-colors active:scale-[0.98]">
+<span class="material-symbols-outlined text-base text-secondary-fixed">swap_horiz</span>
+<span>Switch to Riverfront Forecast</span>
+</button>
+<button class="w-full h-9 px-3 text-label-md font-label-md text-on-surface bg-surface hover:bg-surface-container-low border border-outline-variant rounded-lg flex items-center justify-center gap-2 transition-colors active:scale-[0.98]">
+<span class="material-symbols-outlined text-base text-secondary">map</span>
+<span>View in Explore Map</span>
+</button>
+</div>
+</div>
+<!-- 3. Data Provenance & Academic Prototype Trust Note -->
+<div class="bg-surface-container-low border border-outline-variant/60 rounded-xl p-4 flex flex-col gap-2 text-on-surface-variant">
+<div class="flex items-center gap-2 text-on-surface">
+<span class="material-symbols-outlined text-lg text-secondary">verified_user</span>
+<span class="text-label-md font-label-md font-semibold">Data Provenance &amp; Model Boundaries</span>
+</div>
+<p class="text-body-sm font-body-sm leading-relaxed">
+              This predictive model uses synthetic inductive loop telemetry calibrated against municipal urban mobility heuristics. Predictions reflect statistical scenario modeling for academic and prototyping verification, with transparent bounds on stochastic variance.
+            </p>
+<div class="flex items-center justify-between text-mono-timestamp font-mono-timestamp pt-1 border-t border-outline-variant/40">
+<span>SEED: 0x9AF4_SIM</span>
+<span class="text-emerald-700 font-medium">REPRODUCIBLE INFERENCE</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

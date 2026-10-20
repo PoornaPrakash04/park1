@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ParkX Transit — Explore Map</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface-container": "#e5eeff",
+            "on-secondary-container": "#004666",
+            "primary": "#000000",
+            "outline": "#76777d",
+            "on-tertiary": "#ffffff",
+            "secondary-fixed-dim": "#89ceff",
+            "on-surface": "#0b1c30",
+            "on-primary-fixed": "#131b2e",
+            "on-error-container": "#93000a",
+            "on-tertiary-container": "#009668",
+            "on-tertiary-fixed-variant": "#005236",
+            "on-secondary-fixed-variant": "#004c6e",
+            "on-tertiary-fixed": "#002113",
+            "tertiary": "#000000",
+            "error-container": "#ffdad6",
+            "on-secondary-fixed": "#001e2f",
+            "tertiary-fixed": "#6ffbbe",
+            "inverse-primary": "#bec6e0",
+            "background": "#f8f9ff",
+            "error": "#ba1a1a",
+            "on-primary": "#ffffff",
+            "on-secondary": "#ffffff",
+            "on-primary-container": "#7c839b",
+            "surface-container-highest": "#d3e4fe",
+            "primary-fixed": "#dae2fd",
+            "on-error": "#ffffff",
+            "tertiary-container": "#002113",
+            "surface-container-lowest": "#ffffff",
+            "outline-variant": "#c6c6cd",
+            "secondary": "#006591",
+            "on-background": "#0b1c30",
+            "secondary-fixed": "#c9e6ff",
+            "surface-tint": "#565e74",
+            "tertiary-fixed-dim": "#4edea3",
+            "primary-fixed-dim": "#bec6e0",
+            "on-surface-variant": "#45464d",
+            "surface-dim": "#cbdbf5",
+            "surface-container-low": "#eff4ff",
+            "surface-container-high": "#dce9ff",
+            "inverse-on-surface": "#eaf1ff",
+            "surface-bright": "#f8f9ff",
+            "surface": "#f8f9ff",
+            "inverse-surface": "#213145",
+            "surface-variant": "#d3e4fe",
+            "secondary-container": "#39b8fd",
+            "primary-container": "#131b2e",
+            "on-primary-fixed-variant": "#3f465c"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "space-xs": "0.25rem",
+            "space-md": "0.75rem",
+            "space-lg": "1.25rem",
+            "gutter": "1rem",
+            "space-xl": "1.75rem",
+            "margin": "1.5rem",
+            "space-sm": "0.5rem",
+            "margin-mobile": "0.75rem",
+            "gutter-compact": "0.5rem"
+          },
+          "fontFamily": {
+            "headline-lg-mobile": ["Inter"],
+            "label-md": ["Inter"],
+            "headline-sm": ["Inter"],
+            "body-sm": ["Inter"],
+            "headline-lg": ["Inter"],
+            "body-md": ["Inter"],
+            "mono-metric": ["JetBrains Mono"],
+            "mono-timestamp": ["JetBrains Mono"],
+            "body-lg": ["Inter"],
+            "mono-data": ["JetBrains Mono"],
+            "label-sm": ["Inter"],
+            "display": ["Inter"],
+            "headline-md": ["Inter"]
+          },
+          "fontSize": {
+            "headline-lg-mobile": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+            "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+            "headline-sm": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "body-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0em", "fontWeight": "400" }],
+            "headline-lg": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400" }],
+            "mono-metric": ["24px", { "lineHeight": "28px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "mono-timestamp": ["10px", { "lineHeight": "12px", "letterSpacing": "0.04em", "fontWeight": "400" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.005em", "fontWeight": "400" }],
+            "mono-data": ["12px", { "lineHeight": "16px", "letterSpacing": "0em", "fontWeight": "500" }],
+            "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.025em", "fontWeight": "500" }],
+            "display": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.025em", "fontWeight": "700" }],
+            "headline-md": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "600" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+      font-size: 18px;
+      line-height: 1;
+      display: inline-block;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+    @keyframes pulse-subtle {
+      0%, 100% { transform: scale(1); opacity: 0.9; }
+      50% { transform: scale(1.08); opacity: 0.4; }
+    }
+    .animate-pulse-subtle {
+      animation: pulse-subtle 2.6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+  </style>
+<style>
+  #parkx-leaflet-map { width:100%; height:100%; background:#eaf0f4; z-index:1; }
+  .parkx-original-map-svg { display:none !important; }
+  .leaflet-container { font-family:Inter,sans-serif; z-index:1; }
+  .leaflet-popup-content-wrapper { border-radius:10px; }
+  .parkx-map-pin { width:30px;height:30px;border:2px solid #fff;border-radius:50% 50% 50% 0;transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px #0f172a40;color:#102218;font-size:10px;font-weight:800; }
+  .parkx-map-pin span { transform:rotate(45deg); }
+  .parkx-map-note { position:absolute; z-index:500; left:12px; bottom:12px; background:#fff; border:1px solid #dbe3ec; border-radius:7px; padding:7px 10px; font:11px Inter,sans-serif; color:#475569; box-shadow:0 2px 8px #0f172a12; }
+</style>
+</head>
+<body class="h-full bg-background text-on-surface antialiased overflow-hidden font-body-md text-body-md select-none">
+<!-- ==================== SIDEBAR COMPONENT ==================== -->
+<aside class="fixed top-0 left-0 h-screen w-60 z-40 bg-surface-container-lowest border-r border-outline-variant flex flex-col justify-between p-4 shadow-none">
+<div class="flex flex-col gap-4">
+<!-- Brand & Header -->
+<div class="flex items-center gap-3 px-1 py-1">
+<div class="w-9 h-9 rounded bg-primary flex items-center justify-center text-white shadow-sm flex-shrink-0">
+<span class="material-symbols-outlined" style="font-size: 22px;">local_parking</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-headline-sm text-headline-sm font-bold tracking-tight text-on-surface truncate">ParkX Transit</span>
+<span class="font-mono-timestamp text-mono-timestamp text-on-surface-variant truncate">GIS Operations Platform</span>
+</div>
+</div>
+<!-- Navigation Tabs (Exact 8 Labels from JSON) -->
+<nav aria-label="Main Navigation" class="flex flex-col gap-1 mt-2">
+<!-- Tab 1: Overview -->
+<a class="flex items-center gap-3 px-3 py-2 rounded text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md text-label-md">Overview</span>
+</a>
+<!-- Tab 2: Explore Map (ACTIVE SELECTION) -->
+<a class="flex items-center gap-3 px-3 py-2 rounded bg-surface-container-high text-on-surface font-semibold hover:bg-surface-container-high transition-colors duration-150 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">map</span>
+<span class="font-label-md text-label-md">Explore Map</span>
+<span class="ml-auto w-1.5 h-1.5 rounded-full bg-secondary"></span>
+</a>
+<!-- Tab 3: Parking Availability -->
+<a class="flex items-center gap-3 px-3 py-2 rounded text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined">local_parking</span>
+<span class="font-label-md text-label-md">Parking Availability</span>
+</a>
+<!-- Tab 4: Availability Prediction -->
+<a class="flex items-center gap-3 px-3 py-2 rounded text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined">timeline</span>
+<span class="font-label-md text-label-md">Availability Prediction</span>
+</a>
+<!-- Tab 5: Parking Recommendations -->
+<a class="flex items-center gap-3 px-3 py-2 rounded text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined">recommend</span>
+<span class="font-label-md text-label-md">Parking Recommendations</span>
+</a>
+<!-- Tab 6: Public Transit -->
+<a class="flex items-center gap-3 px-3 py-2 rounded text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined">directions_transit</span>
+<span class="font-label-md text-label-md">Public Transit</span>
+</a>
+<!-- Tab 7: Analytics -->
+<a class="flex items-center gap-3 px-3 py-2 rounded text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-label-md text-label-md">Analytics</span>
+</a>
+<!-- Tab 8: Administration -->
+<a class="flex items-center gap-3 px-3 py-2 rounded text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined">admin_panel_settings</span>
+<span class="font-label-md text-label-md">Administration</span>
+</a>
+</nav>
+</div>
+<!-- Sidebar Footer -->
+<div class="flex flex-col gap-3 pt-3 border-t border-outline-variant">
+<!-- Simulation Mode Banner -->
+<div class="px-3 py-2 rounded bg-surface-container-low border border-surface-container-highest flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-secondary-container animate-ping"></span>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm font-semibold text-on-surface">Simulation Mode</span>
+<span class="font-mono-timestamp text-mono-timestamp text-on-surface-variant">Academic Prototype v2.4</span>
+</div>
+</div>
+<!-- Footer Action Links -->
+<div class="flex flex-col gap-0.5">
+<a class="flex items-center gap-3 px-3 py-1.5 rounded text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined" style="font-size: 16px;">sensors</span>
+<span class="font-label-md text-label-md">System Health</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-1.5 rounded text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined" style="font-size: 16px;">tune</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</div>
+</div>
+</aside>
+<!-- ==================== TOP NAVIGATION BAR ==================== -->
+<header class="fixed top-0 right-0 left-60 h-14 z-30 bg-surface-container-lowest/95 backdrop-blur-md border-b border-outline-variant flex items-center justify-between px-6 shadow-sm">
+<!-- Left Area: Breadcrumb & Search -->
+<div class="flex items-center gap-4 flex-1 max-w-3xl">
+<!-- Breadcrumb -->
+<div class="flex items-center gap-1.5 text-on-surface-variant flex-shrink-0">
+<span class="font-mono-timestamp text-mono-timestamp text-outline">GIS Operations</span>
+<span class="material-symbols-outlined" style="font-size: 14px;">chevron_right</span>
+<span class="font-label-md text-label-md font-semibold text-on-surface">Explore Map</span>
+</div>
+<div class="h-4 w-px bg-outline-variant"></div>
+<!-- Interactive Geo-Destination Search -->
+<div class="relative flex-1 flex items-center">
+<span class="material-symbols-outlined absolute left-3 text-outline pointer-events-none">search</span>
+<input class="w-full h-9 pl-9 pr-16 bg-surface-container-low text-on-surface placeholder:text-outline-variant border border-outline-variant rounded font-body-sm text-body-sm focus:outline-none focus:ring-1 focus:ring-secondary focus:border-secondary transition-all" placeholder="Search city destination, venue, or address... e.g. Central Civic Center, Tech Quarter" type="text" value="Central Civic Center &amp; Tech Hub"/>
+<div class="absolute right-2 flex items-center gap-1">
+<kbd class="px-1.5 py-0.5 text-[10px] font-mono-timestamp text-outline bg-surface-container-lowest rounded border border-outline-variant">⌘K</kbd>
+</div>
+</div>
+<!-- Search Radius Dropdown Pill -->
+<div class="flex items-center gap-1.5 bg-surface-container-low border border-outline-variant rounded px-2.5 py-1.5 flex-shrink-0 cursor-pointer hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-outline" style="font-size: 16px;">near_me</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-mono-data">Radius:</span>
+<span class="font-label-sm text-label-sm font-semibold text-on-surface font-mono-data">800m</span>
+<span class="material-symbols-outlined text-outline" style="font-size: 14px;">expand_more</span>
+</div>
+</div>
+<!-- Right Area: Status Badges, Sync Telemetry & Operator Profile -->
+<div class="flex items-center gap-3 pl-4 flex-shrink-0">
+<!-- Data Trust Pill (SIMULATED BADGE) -->
+<div class="flex items-center gap-2 px-3 py-1 rounded bg-purple-50 text-purple-900 border border-purple-200">
+<span class="w-2 h-2 rounded-full bg-purple-600 animate-pulse"></span>
+<span class="font-mono-timestamp text-mono-timestamp font-semibold">SIMULATED DEMO DATA</span>
+<span class="text-purple-300 font-mono-timestamp">•</span>
+<span class="font-mono-timestamp text-mono-timestamp text-purple-700">Last Telemetry: 14:32:10 UTC</span>
+</div>
+<!-- Telemetry Sync Button -->
+<button class="flex items-center gap-1.5 px-2.5 py-1.5 rounded border border-outline-variant bg-surface-container-lowest hover:bg-surface-container-low text-on-surface transition-colors active:opacity-80">
+<span class="material-symbols-outlined text-outline" style="font-size: 16px;">sync</span>
+<span class="font-label-sm text-label-sm font-medium">Sync Telemetry</span>
+</button>
+<!-- Action Icons -->
+<div class="flex items-center gap-1 border-l border-outline-variant pl-2">
+<button class="p-1.5 rounded hover:bg-surface-container-low text-on-surface-variant transition-colors" title="Notifications">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-1.5 rounded hover:bg-surface-container-low text-on-surface-variant transition-colors" title="Help &amp; Reference">
+<span class="material-symbols-outlined">help</span>
+</button>
+</div>
+<!-- Operator Avatar & Identity -->
+<div class="flex items-center gap-2 pl-1 cursor-pointer">
+<div class="w-8 h-8 rounded-full bg-surface-container-high border border-outline-variant flex items-center justify-center text-on-surface">
+<span class="material-symbols-outlined" style="font-size: 20px;">account_circle</span>
+</div>
+</div>
+</div>
+</header>
+<!-- ==================== MAIN WORKBENCH LAYOUT ==================== -->
+<main class="fixed top-14 left-60 right-0 bottom-0 flex overflow-hidden">
+<!-- ==================== GIS MAP CANVAS (68% WIDTH) ==================== -->
+<div class="w-[68%] h-full relative bg-slate-100 overflow-hidden select-none border-r border-outline-variant">\n<div id="parkx-leaflet-map" aria-label="Interactive ParkX map" class="absolute inset-0 z-0"></div>
+<!-- SVG GIS Cartography Base (High Precision Vector Simulation) -->
+<svg class="parkx-original-map-svg absolute inset-0 w-full h-full pointer-events-none" preserveaspectratio="none" viewbox="0 0 1000 700" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<!-- Grid Pattern -->
+<pattern height="40" id="gisGrid" patternunits="userSpaceOnUse" width="40">
+<path d="M 40 0 L 0 0 0 40" fill="none" stroke="#e2e8f0" stroke-width="0.75"></path>
+</pattern>
+<!-- Urban Block Hatch Pattern -->
+<pattern height="20" id="urbanBlocks" patternunits="userSpaceOnUse" width="20">
+<rect fill="#f1f5f9" height="18" rx="1.5" width="18" x="1" y="1"></rect>
+</pattern>
+</defs>
+<!-- Base Background -->
+<rect fill="#f8fafc" height="700" width="1000"></rect>
+<rect fill="url(#gisGrid)" height="700" width="1000"></rect>
+<!-- Water Body (Civic Riverway Canal) -->
+<path d="M -20 220 C 180 240, 260 210, 410 260 C 580 310, 720 280, 1020 330 L 1020 210 C 720 160, 580 190, 410 140 C 260 90, 180 120, -20 100 Z" fill="#e0f2fe" opacity="0.85"></path>
+<text fill="#0284c7" font-family="Inter" font-size="11" font-weight="600" letter-spacing="3" opacity="0.6" x="180" y="170">CIVIC WATERWAY / EMBANKMENT</text>
+<!-- Built Urban Zones / City Blocks -->
+<rect fill="url(#urbanBlocks)" height="90" rx="2" stroke="#e2e8f0" stroke-width="1" width="130" x="80" y="320"></rect>
+<rect fill="url(#urbanBlocks)" height="90" rx="2" stroke="#e2e8f0" stroke-width="1" width="140" x="230" y="320"></rect>
+<rect fill="url(#urbanBlocks)" height="110" rx="2" stroke="#e2e8f0" stroke-width="1" width="110" x="390" y="330"></rect>
+<rect fill="url(#urbanBlocks)" height="130" rx="2" stroke="#e2e8f0" stroke-width="1" width="130" x="80" y="440"></rect>
+<rect fill="url(#urbanBlocks)" height="130" rx="2" stroke="#e2e8f0" stroke-width="1" width="140" x="230" y="440"></rect>
+<rect fill="url(#urbanBlocks)" height="100" rx="2" stroke="#e2e8f0" stroke-width="1" width="110" x="390" y="470"></rect>
+<rect fill="url(#urbanBlocks)" height="110" rx="2" stroke="#e2e8f0" stroke-width="1" width="160" x="520" y="140"></rect>
+<rect fill="url(#urbanBlocks)" height="100" rx="2" stroke="#e2e8f0" stroke-width="1" width="140" x="700" y="150"></rect>
+<rect fill="url(#urbanBlocks)" height="110" rx="2" stroke="#e2e8f0" stroke-width="1" width="150" x="530" y="350"></rect>
+<rect fill="url(#urbanBlocks)" height="110" rx="2" stroke="#e2e8f0" stroke-width="1" width="160" x="700" y="350"></rect>
+<rect fill="url(#urbanBlocks)" height="110" rx="2" stroke="#e2e8f0" stroke-width="1" width="150" x="530" y="480"></rect>
+<rect fill="url(#urbanBlocks)" height="110" rx="2" stroke="#e2e8f0" stroke-width="1" width="160" x="700" y="480"></rect>
+<!-- Major Arterial Roads -->
+<!-- Grand Civic Avenue (Horizontal Main) -->
+<line stroke="#cbd5e1" stroke-width="18" x1="0" x2="1000" y1="425" y2="425"></line>
+<line stroke="#ffffff" stroke-width="14" x1="0" x2="1000" y1="425" y2="425"></line>
+<line stroke="#94a3b8" stroke-dasharray="8 6" stroke-width="1" x1="0" x2="1000" y1="425" y2="425"></line>
+<!-- Technology Boulevard (Vertical Arterial) -->
+<line stroke="#cbd5e1" stroke-width="16" x1="510" x2="510" y1="0" y2="700"></line>
+<line stroke="#ffffff" stroke-width="12" x1="510" x2="510" y1="0" y2="700"></line>
+<line stroke="#94a3b8" stroke-dasharray="8 6" stroke-width="1" x1="510" x2="510" y1="0" y2="700"></line>
+<!-- 4th Metro Street (Secondary Vertical) -->
+<line stroke="#e2e8f0" stroke-width="10" x1="380" x2="380" y1="200" y2="700"></line>
+<line stroke="#ffffff" stroke-width="8" x1="380" x2="380" y1="200" y2="700"></line>
+<!-- Parkview Expressway (Diagonal) -->
+<line stroke="#cbd5e1" stroke-width="12" x1="120" x2="650" y1="700" y2="0"></line>
+<line stroke="#ffffff" stroke-width="9" x1="120" x2="650" y1="700" y2="0"></line>
+<!-- Arterial Road Labels -->
+<text fill="#64748b" font-family="Inter" font-size="10" font-weight="600" letter-spacing="1" x="60" y="420">GRAND CIVIC AVENUE</text>
+<text fill="#64748b" font-family="Inter" font-size="10" font-weight="600" letter-spacing="1" transform="rotate(90, 518, 80)" x="518" y="80">TECHNOLOGY BOULEVARD</text>
+<text fill="#64748b" font-family="Inter" font-size="10" font-weight="600" letter-spacing="1" x="750" y="420">CIVIC EXPRESSWAY LINK</text>
+<!-- Transit Route Lines -->
+<!-- Bus Route 42 - Teal Dashed Line -->
+<path d="M 50 425 L 380 425 L 510 425 L 510 280 L 720 280" fill="none" stroke="#0d9488" stroke-dasharray="6 4" stroke-width="4"></path>
+<!-- Express Line 10 - Indigo Solid Line -->
+<path d="M 510 680 L 510 425 L 850 425" fill="none" opacity="0.85" stroke="#4f46e5" stroke-width="4"></path>
+<!-- Walking Connection Path from North Deck to Bus Stop and Target Destination -->
+<path d="M 430 380 L 490 380 L 490 425 L 500 425" fill="none" stroke="#0284c7" stroke-dasharray="3 3" stroke-width="2.5"></path>
+<!-- Search Radius 800m Buffer Circle Around Destination (Center at 500, 425) -->
+<circle cx="500" cy="425" fill="#0284c7" fill-opacity="0.04" r="230" stroke="#0284c7" stroke-dasharray="4 3" stroke-width="1.5"></circle>
+<!-- Subtle Secondary 400m Inner Buffer Ring -->
+<circle cx="500" cy="425" fill="none" opacity="0.5" r="115" stroke="#0284c7" stroke-dasharray="2 4" stroke-width="0.75"></circle>
+</svg>
+<!-- ==================== FLOATING MAP CONTROLS: TOP-LEFT LAYER TOGGLES ==================== -->
+<div class="absolute top-4 left-4 z-20 flex items-center gap-1.5 bg-surface-container-lowest/95 backdrop-blur-md p-1 rounded-lg border border-outline-variant shadow-sm">
+<button class="flex items-center gap-1.5 px-2.5 py-1 rounded bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-semibold shadow-xs">
+<span class="material-symbols-outlined text-secondary" style="font-size: 14px;">check</span>
+<span>Parking Lots (18)</span>
+</button>
+<button class="flex items-center gap-1.5 px-2.5 py-1 rounded bg-surface-container-lowest hover:bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm font-medium border border-transparent transition-colors">
+<span class="material-symbols-outlined text-secondary" style="font-size: 14px;">check</span>
+<span>Bus Stops (12)</span>
+</button>
+<button class="flex items-center gap-1.5 px-2.5 py-1 rounded bg-surface-container-lowest hover:bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm font-medium border border-transparent transition-colors">
+<span class="material-symbols-outlined text-secondary" style="font-size: 14px;">check</span>
+<span>Transit Routes (4)</span>
+</button>
+<button class="flex items-center gap-1.5 px-2.5 py-1 rounded bg-surface-container-lowest hover:bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm font-medium border border-transparent transition-colors">
+<span class="material-symbols-outlined text-outline" style="font-size: 14px;">check_box_outline_blank</span>
+<span>Walking Isochrones</span>
+</button>
+</div>
+<!-- ==================== FLOATING MAP CONTROLS: TOP-RIGHT BASEMAP & TOOLS ==================== -->
+<div class="absolute top-4 right-4 z-20 flex items-center gap-2">
+<!-- Basemap Switcher Segmented Control -->
+<div class="flex items-center bg-surface-container-lowest/95 backdrop-blur-md p-1 rounded-lg border border-outline-variant shadow-sm">
+<button class="px-2.5 py-1 rounded bg-primary text-on-primary font-label-sm text-label-sm font-medium">Vector</button>
+<button class="px-2.5 py-1 rounded text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm transition-colors">Satellite</button>
+<button class="px-2.5 py-1 rounded text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm transition-colors">Dark</button>
+</div>
+<!-- Recenter & Fullscreen Tool Buttons -->
+<div class="flex items-center bg-surface-container-lowest/95 backdrop-blur-md p-1 rounded-lg border border-outline-variant shadow-sm">
+<button class="p-1 rounded text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" title="Recenter Map">
+<span class="material-symbols-outlined">my_location</span>
+</button>
+<button class="p-1 rounded text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" title="Toggle Fullscreen">
+<span class="material-symbols-outlined">fullscreen</span>
+</button>
+</div>
+</div>
+<!-- ==================== INTERACTIVE MAP MARKERS ==================== -->
+<!-- 1. Destination Target Marker (Central Civic Center) -->
+<div class="absolute left-[50%] top-[60.7%] -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-auto flex flex-col items-center">
+<!-- Outer Glowing Pulse Halo -->
+<div class="absolute w-12 h-12 -top-3 rounded-full bg-indigo-500/20 animate-pulse-subtle pointer-events-none"></div>
+<div class="w-8 h-8 rounded-full bg-primary-container border-2 border-white shadow-md flex items-center justify-center text-white z-10">
+<span class="material-symbols-outlined" style="font-size: 18px; font-variation-settings: 'FILL' 1;">flag</span>
+</div>
+<!-- Destination Label Pin -->
+<div class="mt-1 px-2.5 py-0.5 rounded bg-primary-container text-white font-label-sm text-label-sm font-semibold tracking-tight shadow-md flex items-center gap-1 border border-white/20 whitespace-nowrap">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary-container"></span>
+<span>Central Civic Center &amp; Tech Hub</span>
+</div>
+</div>
+<!-- 2. Walking Connection Badge Floating Over Path -->
+<div class="absolute left-[44.5%] top-[56.5%] -translate-x-1/2 -translate-y-1/2 z-25 bg-surface-container-lowest/95 backdrop-blur-md px-2 py-0.5 rounded border border-secondary text-secondary font-mono-timestamp text-mono-timestamp font-semibold shadow-xs flex items-center gap-1 pointer-events-auto">
+<span class="material-symbols-outlined" style="font-size: 12px;">directions_walk</span>
+<span>4 min walk • 280m</span>
+</div>
+<!-- 3. Top Recommended Parking Marker (Civic Center North Deck) - WITH ACTIVE POPUP -->
+<div class="absolute left-[43%] top-[54.3%] -translate-x-1/2 -translate-y-full z-35 pointer-events-auto flex flex-col items-center cursor-pointer">
+<!-- Mini Info Popup Preview -->
+<div class="mb-2 bg-surface-container-lowest rounded-lg border border-secondary p-2.5 shadow-lg w-64 text-left relative animate-in fade-in zoom-in-95 duration-150">
+<div class="flex items-start justify-between">
+<div>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary font-bold">Top Recommendation</span>
+<h4 class="font-headline-sm text-headline-sm font-semibold text-on-surface leading-snug">Civic Center North Deck</h4>
+</div>
+<span class="px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-200 font-mono-timestamp text-mono-timestamp font-semibold">94% MATCH</span>
+</div>
+<div class="mt-2 grid grid-cols-2 gap-1.5 pt-1.5 border-t border-slate-100 font-mono-data text-mono-data">
+<div class="flex flex-col">
+<span class="text-on-surface-variant text-[10px]">REAL-TIME FREE</span>
+<span class="font-bold text-emerald-700">142 <span class="font-normal text-on-surface-variant">/ 450</span></span>
+</div>
+<div class="flex flex-col text-right">
+<span class="text-on-surface-variant text-[10px]">HOURLY TARIFF</span>
+<span class="font-bold text-on-surface">$3.50/hr</span>
+</div>
+</div>
+<div class="mt-2 flex items-center justify-between text-[11px] pt-1 text-on-surface-variant">
+<span class="flex items-center gap-1 text-teal-800"><span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span>Route 42 bus stop 20m</span>
+<span class="font-semibold text-secondary">Selected</span>
+</div>
+<!-- Pointer Tip Triangle -->
+<div class="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-surface-container-lowest border-r border-b border-secondary transform rotate-45"></div>
+</div>
+<!-- Marker Badge: Green / High Availability -->
+<div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-600 text-white font-mono-data text-mono-data font-bold shadow-md border-2 border-white ring-2 ring-emerald-500/30">
+<span class="material-symbols-outlined" style="font-size: 15px; font-variation-settings: 'FILL' 1;">local_parking</span>
+<span>North Deck: 142 free</span>
+</div>
+</div>
+<!-- 4. Marker: Greenline Garage (Green Badge) -->
+<div class="absolute left-[31%] top-[48%] -translate-x-1/2 -translate-y-1/2 z-25 pointer-events-auto cursor-pointer">
+<div class="flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-600 text-white font-mono-data text-mono-data font-semibold shadow border border-white hover:scale-105 transition-transform">
+<span class="material-symbols-outlined" style="font-size: 13px;">local_parking</span>
+<span>Greenline: 88 free</span>
+</div>
+</div>
+<!-- 5. Marker: Metro Hub Underground (Yellow/Amber Badge) -->
+<div class="absolute left-[58%] top-[62%] -translate-x-1/2 -translate-y-1/2 z-25 pointer-events-auto cursor-pointer">
+<div class="flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-500 text-white font-mono-data text-mono-data font-semibold shadow border border-white hover:scale-105 transition-transform">
+<span class="material-symbols-outlined" style="font-size: 13px;">local_parking</span>
+<span>Metro Hub: 24 free (82% Full)</span>
+</div>
+</div>
+<!-- 6. Marker: Plaza Point Garage (Red Badge) -->
+<div class="absolute left-[48%] top-[68%] -translate-x-1/2 -translate-y-1/2 z-25 pointer-events-auto cursor-pointer">
+<div class="flex items-center gap-1 px-2 py-0.5 rounded-full bg-rose-600 text-white font-mono-data text-mono-data font-semibold shadow border border-white hover:scale-105 transition-transform">
+<span class="material-symbols-outlined" style="font-size: 13px;">local_parking</span>
+<span>Plaza Point: 4 free (97%)</span>
+</div>
+</div>
+<!-- 7. Marker: City Hall Lot B (Gray Badge - Closed) -->
+<div class="absolute left-[36%] top-[66%] -translate-x-1/2 -translate-y-1/2 z-25 pointer-events-auto cursor-pointer">
+<div class="flex items-center gap-1 px-2 py-0.5 rounded-full bg-slate-500 text-white font-mono-data text-mono-data font-semibold shadow border border-white opacity-85 hover:scale-105 transition-transform">
+<span class="material-symbols-outlined" style="font-size: 13px;">block</span>
+<span>Lot B: Closed</span>
+</div>
+</div>
+<!-- Transit Markers: Cyan/Blue Bus Stops -->
+<div class="absolute left-[49%] top-[60.7%] -translate-x-1/2 -translate-y-1/2 z-28 pointer-events-auto cursor-pointer" title="Stop #402 Civic Plaza">
+<div class="w-6 h-6 rounded-full bg-teal-600 border border-white shadow-sm flex items-center justify-center text-white hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" style="font-size: 14px;">directions_bus</span>
+</div>
+</div>
+<div class="absolute left-[51%] top-[40%] -translate-x-1/2 -translate-y-1/2 z-28 pointer-events-auto cursor-pointer" title="Stop #118 Metro Line B">
+<div class="w-6 h-6 rounded-full bg-indigo-600 border border-white shadow-sm flex items-center justify-center text-white hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" style="font-size: 14px;">directions_subway</span>
+</div>
+</div>
+<!-- Route 42 Badge Indicator Floating on Canvas -->
+<div class="absolute left-[24%] top-[60.7%] -translate-y-1/2 z-20 bg-teal-800 text-white font-mono-timestamp text-mono-timestamp px-1.5 py-0.5 rounded font-bold shadow-xs flex items-center gap-1">
+<span>BUS 42</span>
+<span class="material-symbols-outlined" style="font-size: 11px;">arrow_forward</span>
+</div>
+<!-- ==================== FLOATING MAP CONTROLS: BOTTOM-LEFT MAP LEGEND ==================== -->
+<div class="absolute bottom-4 left-4 z-20 bg-surface-container-lowest/95 backdrop-blur-md p-3 rounded-lg border border-outline-variant shadow-sm w-72">
+<div class="flex items-center justify-between pb-1.5 border-b border-outline-variant mb-2">
+<span class="font-label-sm text-label-sm font-bold uppercase tracking-wider text-on-surface">GIS Spatial Legend</span>
+<span class="font-mono-timestamp text-mono-timestamp text-outline">v2.1</span>
+</div>
+<div class="grid grid-cols-2 gap-y-1.5 gap-x-2 font-mono-timestamp text-mono-timestamp text-on-surface-variant">
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 rounded-full bg-emerald-600"></span>
+<span>&gt;30% Free (High)</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+<span>10-30% (Filling)</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 rounded-full bg-rose-600"></span>
+<span>&lt;10% Free (Critical)</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 rounded-full bg-slate-500"></span>
+<span>Closed / Maint.</span>
+</div>
+<div class="flex items-center gap-1.5 pt-1">
+<span class="w-3.5 h-1 bg-teal-600 border border-teal-700"></span>
+<span>Bus Route 42</span>
+</div>
+<div class="flex items-center gap-1.5 pt-1">
+<span class="w-3.5 h-1 bg-indigo-600 border border-indigo-700"></span>
+<span>Express Line 10</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-3 h-0.5 border-t-2 border-dashed border-sky-600"></span>
+<span>Walking Link</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 rounded-full border border-sky-600 bg-sky-100"></span>
+<span>Search Buffer</span>
+</div>
+</div>
+</div>
+<!-- ==================== FLOATING MAP CONTROLS: BOTTOM-RIGHT ZOOM & SCALE ==================== -->
+<div class="absolute bottom-4 right-4 z-20 flex flex-col items-end gap-2">
+<!-- Zoom Buttons -->
+<div class="flex flex-col bg-surface-container-lowest/95 backdrop-blur-md rounded-lg border border-outline-variant shadow-sm overflow-hidden">
+<button class="p-2 hover:bg-surface-container-low text-on-surface border-b border-outline-variant transition-colors" title="Zoom In">
+<span class="material-symbols-outlined">add</span>
+</button>
+<button class="p-2 hover:bg-surface-container-low text-on-surface transition-colors" title="Zoom Out">
+<span class="material-symbols-outlined">remove</span>
+</button>
+</div>
+<!-- GIS Scale Bar -->
+<div class="bg-surface-container-lowest/95 backdrop-blur-md px-2 py-1 rounded border border-outline-variant shadow-xs flex items-center gap-2 font-mono-timestamp text-mono-timestamp text-on-surface">
+<div class="w-16 h-1 border-b-2 border-l-2 border-r-2 border-primary"></div>
+<span>200m / 500ft</span>
+</div>
+</div>
+</div>
+<!-- ==================== PARKING RESULTS & RECOMMENDATIONS PANEL (32% WIDTH) ==================== -->
+<div class="w-[32%] h-full bg-surface-container-lowest flex flex-col overflow-hidden">
+<!-- Panel Header & Search Context -->
+<div class="p-4 border-b border-outline-variant flex-shrink-0 bg-surface-container-lowest">
+<div class="flex items-center justify-between mb-2">
+<div class="flex items-center gap-2">
+<h2 class="font-headline-sm text-headline-sm font-bold text-on-surface">Nearby Facilities</h2>
+<span class="px-2 py-0.5 rounded-full bg-surface-container-high font-mono-data text-mono-data text-secondary font-semibold">18 found</span>
+</div>
+<!-- Filter Trigger -->
+<button class="flex items-center gap-1 px-2 py-1 rounded border border-outline-variant hover:bg-surface-container-low text-on-surface font-label-sm text-label-sm transition-colors">
+<span class="material-symbols-outlined" style="font-size: 15px;">tune</span>
+<span>Filters</span>
+</button>
+</div>
+<!-- Arrival Time & Predictive Modeling Selector -->
+<div class="p-2 rounded bg-surface-container-low border border-surface-container-highest flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary" style="font-size: 18px;">schedule</span>
+<div class="flex flex-col">
+<span class="font-mono-timestamp text-mono-timestamp text-on-surface-variant font-medium">ARRIVAL TIME MODELING</span>
+<span class="font-label-sm text-label-sm font-semibold text-on-surface">Today, 17:30 (Peak Hour)</span>
+</div>
+</div>
+<div class="flex items-center gap-1.5 bg-surface-container-lowest px-2 py-1 rounded border border-outline-variant cursor-pointer hover:bg-white transition-colors">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+<span class="font-mono-timestamp text-mono-timestamp font-semibold text-secondary">Predictive ON</span>
+</div>
+</div>
+<!-- Sort Filter Segmented Tabs -->
+<div class="mt-3 grid grid-cols-4 gap-1 p-0.5 rounded bg-surface-container-low border border-surface-container-highest text-center font-label-sm text-label-sm">
+<button class="py-1 rounded bg-surface-container-lowest font-semibold text-secondary border border-outline-variant shadow-xs">Best Match</button>
+<button class="py-1 rounded text-on-surface-variant hover:text-on-surface transition-colors">Price</button>
+<button class="py-1 rounded text-on-surface-variant hover:text-on-surface transition-colors">Distance</button>
+<button class="py-1 rounded text-on-surface-variant hover:text-on-surface transition-colors">Capacity</button>
+</div>
+</div>
+<!-- Scrollable Facility Cards List -->
+<div class="flex-1 overflow-y-auto custom-scrollbar p-3 space-y-3">
+<!-- ==================== CARD 1: TOP RECOMMENDED (SELECTED) ==================== -->
+<div class="p-3.5 rounded-lg border-2 border-secondary bg-surface-container-lowest shadow-sm flex flex-col gap-2.5 transition-all relative">
+<!-- Selection Ribbon -->
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="px-2 py-0.5 rounded bg-secondary-fixed text-on-secondary-fixed font-mono-timestamp text-mono-timestamp font-bold uppercase tracking-wider">
+                TOP RECOMMENDED #1
+              </span>
+<span class="px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-200 font-mono-timestamp text-mono-timestamp font-semibold">
+                94% GIS MATCH
+              </span>
+</div>
+<span class="font-mono-timestamp text-mono-timestamp text-outline font-semibold">350m (4 min walk)</span>
+</div>
+<!-- Title and Fee -->
+<div class="flex items-start justify-between">
+<div>
+<h3 class="font-headline-sm text-headline-sm font-bold text-on-surface">Civic Center North Deck</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">140 Grand Civic Ave • Multilevel Garage</p>
+</div>
+<div class="text-right">
+<span class="font-mono-metric text-mono-metric font-bold text-on-surface">$3.50</span>
+<span class="font-mono-data text-mono-data text-on-surface-variant">/hr</span>
+</div>
+</div>
+<!-- Status Indicator -->
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-emerald-600"></span>
+<span class="font-label-sm text-label-sm font-semibold text-emerald-800 uppercase tracking-tight">OPEN - HIGH AVAILABILITY</span>
+</div>
+<!-- Capacity Rail / Metric Progress -->
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between font-mono-data text-mono-data">
+<span class="text-on-surface-variant font-medium">Available Capacity:</span>
+<span class="font-bold text-emerald-700">142 free <span class="font-normal text-on-surface-variant">/ 450 total (68%)</span></span>
+</div>
+<div class="w-full h-1.5 rounded-full bg-surface-container-high overflow-hidden">
+<div class="h-full bg-emerald-600 rounded-full" style="width: 68%;"></div>
+</div>
+</div>
+<!-- Predictive Forecasting Alert Box -->
+<div class="p-2 rounded bg-surface-container-low border border-surface-container-highest flex items-start gap-2">
+<span class="material-symbols-outlined text-secondary mt-0.5" style="font-size: 16px;">trending_up</span>
+<div class="flex flex-col">
+<div class="flex items-center gap-1.5">
+<span class="font-mono-timestamp text-mono-timestamp font-bold text-on-surface">Predicted Availability at 17:30:</span>
+<span class="font-mono-timestamp text-mono-timestamp text-emerald-700 font-semibold">118 spaces</span>
+</div>
+<span class="font-mono-timestamp text-mono-timestamp text-on-surface-variant">Model confidence: 96% (Steady turnover)</span>
+</div>
+</div>
+<!-- Transit Link Pill -->
+<div class="flex items-center gap-2 px-2 py-1.5 rounded bg-teal-50 border border-teal-200 text-teal-900 font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-teal-700" style="font-size: 16px;">directions_bus</span>
+<span class="truncate">Route 42 bus stop right outside (1 min walk • 20m)</span>
+</div>
+<!-- Action Buttons Group -->
+<div class="pt-2 border-t border-outline-variant flex items-center gap-2">
+<button class="flex-1 py-1.5 px-3 rounded bg-primary hover:bg-slate-800 text-on-primary font-label-md text-label-md font-semibold transition-colors flex items-center justify-center gap-1.5 shadow-xs">
+<span class="material-symbols-outlined" style="font-size: 16px;">navigation</span>
+<span>Select Destination Route</span>
+</button>
+<button class="py-1.5 px-2.5 rounded border border-outline-variant hover:bg-surface-container-low text-on-surface font-label-sm text-label-sm font-medium transition-colors" title="Compare with others">
+<span>Compare</span>
+</button>
+<button class="p-1.5 rounded border border-outline-variant hover:bg-surface-container-low text-on-surface-variant transition-colors" title="View Live Telemetry">
+<span class="material-symbols-outlined" style="font-size: 16px;">insights</span>
+</button>
+</div>
+</div>
+<!-- ==================== CARD 2: METRO HUB UNDERGROUND ==================== -->
+<div class="p-3.5 rounded-lg border border-outline-variant bg-surface-container-lowest hover:border-outline transition-colors flex flex-col gap-2.5">
+<div class="flex items-center justify-between">
+<span class="px-2 py-0.5 rounded bg-surface-container-high text-on-surface-variant font-mono-timestamp text-mono-timestamp font-bold uppercase">
+              TRANSIT INTERCHANGE
+            </span>
+<span class="font-mono-timestamp text-mono-timestamp text-outline font-semibold">520m (6 min walk)</span>
+</div>
+<div class="flex items-start justify-between">
+<div>
+<h3 class="font-headline-sm text-headline-sm font-semibold text-on-surface">Metro Hub Underground</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">88 Technology Blvd • Subterranean Complex</p>
+</div>
+<div class="text-right">
+<span class="font-mono-metric text-mono-metric font-bold text-on-surface">$2.50</span>
+<span class="font-mono-data text-mono-data text-on-surface-variant">/hr</span>
+</div>
+</div>
+<!-- Status Indicator: Amber Moderate -->
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-amber-500"></span>
+<span class="font-label-sm text-label-sm font-semibold text-amber-800 uppercase tracking-tight">OPEN - MODERATE AVAILABILITY</span>
+</div>
+<!-- Capacity Rail -->
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between font-mono-data text-mono-data">
+<span class="text-on-surface-variant font-medium">Available Capacity:</span>
+<span class="font-bold text-amber-700">88 free <span class="font-normal text-on-surface-variant">/ 320 total (28%)</span></span>
+</div>
+<div class="w-full h-1.5 rounded-full bg-surface-container-high overflow-hidden">
+<div class="h-full bg-amber-500 rounded-full" style="width: 28%;"></div>
+</div>
+</div>
+<!-- Transit Link Pill -->
+<div class="flex items-center gap-2 px-2 py-1.5 rounded bg-indigo-50 border border-indigo-200 text-indigo-900 font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-indigo-700" style="font-size: 16px;">hub</span>
+<span class="truncate">Connects to Express 10 &amp; Route 42</span>
+</div>
+<!-- Card Actions -->
+<div class="pt-2 border-t border-outline-variant flex items-center justify-between">
+<span class="font-mono-timestamp text-mono-timestamp text-on-surface-variant">Predicted 17:30: ~62 free</span>
+<div class="flex items-center gap-2">
+<button class="py-1 px-2.5 rounded border border-outline-variant hover:bg-surface-container-low font-label-sm text-label-sm text-on-surface">Compare</button>
+<button class="py-1 px-2.5 rounded bg-surface-container-high hover:bg-surface-container text-on-surface font-label-sm text-label-sm font-medium">Route</button>
+</div>
+</div>
+</div>
+<!-- ==================== CARD 3: PLAZA POINT GARAGE ==================== -->
+<div class="p-3.5 rounded-lg border border-rose-200 bg-rose-50/30 transition-colors flex flex-col gap-2.5">
+<div class="flex items-center justify-between">
+<span class="px-2 py-0.5 rounded bg-rose-100 text-rose-900 border border-rose-200 font-mono-timestamp text-mono-timestamp font-bold uppercase">
+              HIGH DENSITY
+            </span>
+<span class="font-mono-timestamp text-mono-timestamp text-outline font-semibold">180m (2 min walk)</span>
+</div>
+<div class="flex items-start justify-between">
+<div>
+<h3 class="font-headline-sm text-headline-sm font-semibold text-on-surface">Plaza Point Automated Garage</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">12 Market Court • Robotic Stacking</p>
+</div>
+<div class="text-right">
+<span class="font-mono-metric text-mono-metric font-bold text-on-surface">$5.00</span>
+<span class="font-mono-data text-mono-data text-on-surface-variant">/hr</span>
+</div>
+</div>
+<!-- Status Indicator: Red Critical -->
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-rose-600"></span>
+<span class="font-label-sm text-label-sm font-semibold text-rose-800 uppercase tracking-tight">CRITICAL / NEARLY FULL</span>
+</div>
+<!-- Capacity Rail -->
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between font-mono-data text-mono-data">
+<span class="text-on-surface-variant font-medium">Available Capacity:</span>
+<span class="font-bold text-rose-700">4 free <span class="font-normal text-on-surface-variant">/ 210 total (2%)</span></span>
+</div>
+<div class="w-full h-1.5 rounded-full bg-surface-container-high overflow-hidden">
+<div class="h-full bg-rose-600 rounded-full" style="width: 2%;"></div>
+</div>
+</div>
+<!-- Predictive Warning Badge -->
+<div class="p-2 rounded bg-rose-100/60 border border-rose-200 flex items-start gap-1.5">
+<span class="material-symbols-outlined text-rose-700" style="font-size: 16px;">warning</span>
+<span class="font-mono-timestamp text-mono-timestamp text-rose-900 font-medium">
+              High turnover rate • Predicted full by 17:15 (Prior to arrival time)
+            </span>
+</div>
+<!-- Card Actions -->
+<div class="pt-1.5 border-t border-rose-200/60 flex items-center justify-end gap-2">
+<button class="py-1 px-2.5 rounded border border-outline-variant hover:bg-surface-container-low font-label-sm text-label-sm text-on-surface">Compare</button>
+<button class="py-1 px-2.5 rounded border border-outline-variant text-outline cursor-not-allowed font-label-sm text-label-sm" disabled="">Full Risk</button>
+</div>
+</div>
+<!-- ==================== CARD 4: RIVERFRONT PARK & RIDE ==================== -->
+<div class="p-3.5 rounded-lg border border-outline-variant bg-surface-container-lowest hover:border-outline transition-colors flex flex-col gap-2.5">
+<div class="flex items-center justify-between">
+<span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-900 border border-emerald-200 font-mono-timestamp text-mono-timestamp font-bold uppercase">
+              PARK &amp; RIDE
+            </span>
+<span class="font-mono-timestamp text-mono-timestamp text-outline font-semibold">1.2km (Transit link: 5 min bus)</span>
+</div>
+<div class="flex items-start justify-between">
+<div>
+<h3 class="font-headline-sm text-headline-sm font-semibold text-on-surface">Riverfront Park &amp; Ride</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">500 Waterfront Way • Surface Lot</p>
+</div>
+<div class="text-right">
+<span class="font-mono-metric text-mono-metric font-bold text-emerald-700">FREE</span>
+<p class="font-mono-timestamp text-mono-timestamp text-on-surface-variant">w/ Transit Pass</p>
+</div>
+</div>
+<!-- Status Indicator: Green Ample -->
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-emerald-600"></span>
+<span class="font-label-sm text-label-sm font-semibold text-emerald-800 uppercase tracking-tight">OPEN - AMPLE CAPACITY</span>
+</div>
+<!-- Capacity Rail -->
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between font-mono-data text-mono-data">
+<span class="text-on-surface-variant font-medium">Available Capacity:</span>
+<span class="font-bold text-emerald-700">310 free <span class="font-normal text-on-surface-variant">/ 500 total (62%)</span></span>
+</div>
+<div class="w-full h-1.5 rounded-full bg-surface-container-high overflow-hidden">
+<div class="h-full bg-emerald-600 rounded-full" style="width: 62%;"></div>
+</div>
+</div>
+<!-- Card Actions -->
+<div class="pt-1.5 border-t border-outline-variant flex items-center justify-between">
+<span class="font-mono-timestamp text-mono-timestamp text-on-surface-variant">Bus 42 leaves every 6 min</span>
+<div class="flex items-center gap-2">
+<button class="py-1 px-2.5 rounded border border-outline-variant hover:bg-surface-container-low font-label-sm text-label-sm text-on-surface">Compare</button>
+<button class="py-1 px-2.5 rounded bg-surface-container-high hover:bg-surface-container text-on-surface font-label-sm text-label-sm font-medium">Select</button>
+</div>
+</div>
+</div>
+</div>
+<!-- ==================== BOTTOM COMPARISON DRAWER TEASER ==================== -->
+<div class="p-3 border-t border-outline-variant bg-surface-container-low flex items-center justify-between flex-shrink-0">
+<div class="flex items-center gap-2">
+<div class="w-7 h-7 rounded bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center font-mono-data text-mono-data font-bold">
+            2
+          </div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm font-semibold text-on-surface">Facilities Queued</span>
+<span class="font-mono-timestamp text-mono-timestamp text-on-surface-variant">Civic North Deck vs. Metro Hub</span>
+</div>
+</div>
+<button class="px-3 py-1.5 rounded bg-surface-container-lowest border border-outline-variant hover:bg-white text-secondary font-label-sm text-label-sm font-bold flex items-center gap-1 shadow-xs transition-colors">
+<span>Compare Side-by-Side</span>
+<span class="material-symbols-outlined" style="font-size: 14px;">arrow_forward</span>
+</button>
+</div>
+</div>
+</main>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+(function () {
+  const mapNode = document.getElementById('parkx-leaflet-map');
+  if (!mapNode || !window.L || mapNode.dataset.ready) return;
+  mapNode.dataset.ready = 'true';
+  // Demonstration locations in Thiruvananthapuram; replace with API data when available.
+  const map = L.map(mapNode, { zoomControl: false }).setView([8.5008, 76.9470], 13);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a>'
+  }).addTo(map);
+  L.control.zoom({ position: 'bottomright' }).addTo(map);
+  const parking = [
+    {name:'Thampanoor Parking Area',lat:8.4875,lng:76.9525,capacity:120,available:34,fee:'₹20/hour'},
+    {name:'Palayam Parking Area',lat:8.5052,lng:76.9560,capacity:80,available:21,fee:'₹15/hour'},
+    {name:'Museum Compound Parking',lat:8.5088,lng:76.9535,capacity:65,available:9,fee:'₹20/hour'},
+    {name:'East Fort Parking Area',lat:8.4835,lng:76.9470,capacity:90,available:42,fee:'₹10/hour'}
+  ];
+  // Corrected, approximate demonstration coordinates.
+  parking[3].lat = 8.4835; parking[3].lng = 76.9470;
+  const transit = [
+    {name:'Thampanoor Bus Terminal',lat:8.4866,lng:76.9524},
+    {name:'Palayam Bus Stop',lat:8.5040,lng:76.9566},
+    {name:'East Fort Bus Stop',lat:8.4832,lng:76.9478},
+    {name:'Museum Bus Stop',lat:8.5080,lng:76.9547}
+  ];
+  const parkingLayer = L.layerGroup().addTo(map);
+  const transitLayer = L.layerGroup().addTo(map);
+  function pin(color, label) {
+    return L.divIcon({className:'',html:'<div class="parkx-map-pin" style="background:'+color+'"><span>'+label+'</span></div>',iconSize:[30,30],iconAnchor:[15,28],popupAnchor:[0,-27]});
+  }
+  parking.forEach(p => {
+    const color = p.available / p.capacity > .35 ? '#b8f36b' : (p.available / p.capacity > .15 ? '#f5c66b' : '#fb8b82');
+    L.marker([p.lat,p.lng],{icon:pin(color,'P')}).bindPopup(
+      '<div style="min-width:175px"><strong>'+p.name+'</strong><br><span style="color:#64748b">Demo parking data</span><hr style="margin:7px 0;border:0;border-top:1px solid #e2e8f0"><b>'+p.available+' / '+p.capacity+'</b> spaces available<br>Fee: '+p.fee+'</div>'
+    ).addTo(parkingLayer);
+  });
+  transit.forEach(t => L.circleMarker([t.lat,t.lng],{radius:6,color:'#fff',weight:2,fillColor:'#1686b5',fillOpacity:1})
+    .bindPopup('<strong>'+t.name+'</strong><br><span style="color:#64748b">Transit location · demo marker</span>').addTo(transitLayer));
+  const note = document.createElement('div');
+  note.className = 'parkx-map-note';
+  note.textContent = 'Demo locations · Thiruvananthapuram';
+  mapNode.appendChild(note);
+  // Wire common map-layer toggles where the exported screen labels are present.
+  document.querySelectorAll('button').forEach(btn => {
+    const label = (btn.innerText || btn.getAttribute('aria-label') || btn.title || '').toLowerCase();
+    if (label.includes('transit') || label.includes('bus stop')) btn.addEventListener('click', () => {
+      if (map.hasLayer(transitLayer)) map.removeLayer(transitLayer); else transitLayer.addTo(map);
+    });
+    if (label.includes('parking')) btn.addEventListener('click', () => {
+      if (map.hasLayer(parkingLayer)) map.removeLayer(parkingLayer); else parkingLayer.addTo(map);
+    });
+    if (label.includes('recenter') || label.includes('my location')) btn.addEventListener('click', () => map.setView([8.5008,76.9470],13));
+  });
+  setTimeout(() => map.invalidateSize(), 250);
+  window.addEventListener('resize', () => map.invalidateSize());
+})();
+</script>
+\n</body></html>
